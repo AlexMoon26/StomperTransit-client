@@ -150,7 +150,7 @@ export const Tables = ({ data, clients, drivers }: TableProps) => {
                     <div className="flex items-center gap-2">
                       <div className="h-[30px] w-[30px] rounded-full">
                         <img
-                          src={item.imgUser}
+                          src={item.imgUser || '/images/profile.png'}
                           className="h-full w-full rounded-full"
                           alt=""
                         />

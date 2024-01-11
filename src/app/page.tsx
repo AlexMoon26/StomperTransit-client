@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 import NextLink from "next/link";
 
-export const Home = () => {
+const Home = () => {
   const dispatch = useAppDispatch();
 
   const handleLogOut = () => {

@@ -1,6 +1,8 @@
 "use client";
 import { UserState, selectAuth } from "@/GlobalRedux/Features/authSlice";
 import { useAppSelector } from "@/GlobalRedux/hooks";
+import { ErrorForbidden } from "@/pages/ErrorForbidden";
+import { Loader } from "@/shared/Loader";
 import { Button } from "@mui/material";
 import Link from "next/link";
 import React from "react";
@@ -10,15 +12,12 @@ export const AdminMiddleware = ({ children }: any) => {
   const isLoading = useAppSelector(selectAuth).isLoading;
 
   if (isLoading) {
-    return <h2>Загрузка...</h2>;
+    return <Loader />;
   }
   if (user?.role !== "admin")
     return (
       <>
-        <h1>Доступ запрещен!</h1>
-        <Button variant="contained">
-          <Link href="/">Вернуться на главную</Link>
-        </Button>
+        <ErrorForbidden />
       </>
     );
   return <>{children}</>;

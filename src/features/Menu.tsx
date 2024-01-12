@@ -3,6 +3,7 @@ import React from "react";
 import home from "../../public/homeImg.svg";
 import orders from "../../public/notification.svg";
 import clients from "../../public/clients.svg";
+import logout from "../../public/images/icons/logout.svg";
 
 export const Menu = ({ handleSidebarToggle }) => {
   return (
@@ -30,6 +31,12 @@ export const Menu = ({ handleSidebarToggle }) => {
           name={"Водители"}
           image={clients}
           path={"admin/drivers"}
+          handleSidebarToggle={handleSidebarToggle}
+        />
+        <MenuItems
+          name={"Вернуться на главную"}
+          path={"/"}
+          image={logout}
           handleSidebarToggle={handleSidebarToggle}
         />
       </ul>

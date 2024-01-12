@@ -5,10 +5,12 @@ import {
   selectAuth,
 } from "@/GlobalRedux/Features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/GlobalRedux/hooks";
-import { Button } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 
 import NextLink from "next/link";
+import { theme } from "@/theme/theme";
+import { Loader } from "@/shared/Loader";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -23,37 +25,49 @@ const Home = () => {
   const isLoading = useAppSelector(selectAuth).isLoading;
 
   if (isLoading) {
-    return <h2>Загрузка...</h2>;
+    return <Loader />;
   }
 
   return (
     <>
-      {user && user?._id !== null ? (
-        <>
-          <h2>Привет, твои данные:</h2>
-          <h3>id: {user?._id}</h3>
-          <h3>Имя: {user?.firstName}</h3>
-          <h3>Фамилия: {user?.surName}</h3>
-          <h3>Телефон: {user?.phone}</h3>
-          <h3>Роль: {user?.role}</h3>
-          <Button variant="contained" onClick={handleLogOut}>
-            Выйти
-          </Button>
-
-          {user.role === "admin" && (
-            <Button component={NextLink} href="/admin">
-              Админ панель
-            </Button>
+      <Box
+        height="100vh"
+        width="100vw"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+          gap={2}
+        >
+          {user && user?._id !== null ? (
+            <>
+              <Typography textAlign="center">
+                Добрый день, {user.firstName}!
+              </Typography>
+              <Button variant="contained" fullWidth onClick={handleLogOut}>
+                Выйти
+              </Button>
+              {user.role === "admin" && (
+                <Button component={NextLink} href="/admin">
+                  Админ панель
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Typography textAlign="center">Вы не авторизованы</Typography>
+              <Button variant="contained" component={NextLink} href="/signin">
+                Авторизоваться
+              </Button>
+            </>
           )}
-        </>
-      ) : (
-        <>
-          <h2>Вы не авторизованы</h2>
-          <Button variant="contained" component={NextLink} href="/signin">
-            Авторизоваться
-          </Button>
-        </>
-      )}
+        </Box>
+      </Box>
     </>
   );
 };

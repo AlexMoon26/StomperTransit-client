@@ -3,11 +3,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export const MenuItems = ({ name, image, path, handleSidebarToggle }) => {
+interface IProps {
+  name: string;
+  image?: string;
+  path: string;
+  handleSidebarToggle: () => void;
+}
+
+export const MenuItems = ({
+  name,
+  image,
+  path,
+  handleSidebarToggle,
+}: IProps) => {
   const pathname = usePathname();
 
   const isCurrentPage = (page) => {
-    return pathname.endsWith(page);
+    return pathname!.endsWith(page);
   };
 
   return (
@@ -21,7 +33,9 @@ export const MenuItems = ({ name, image, path, handleSidebarToggle }) => {
             : "text-gray-400"
         }`}
       >
-        <Image src={image} alt={name} className="w-6 h-6 fill-red-600" />
+        {image && (
+          <Image src={image} alt={name} className="w-6 h-6 fill-red-600" />
+        )}
         <span className="ml-3">{name}</span>
       </Link>
     </li>

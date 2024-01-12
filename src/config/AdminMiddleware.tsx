@@ -1,11 +1,8 @@
 "use client";
 import { UserState, selectAuth } from "@/GlobalRedux/Features/authSlice";
 import { useAppSelector } from "@/GlobalRedux/hooks";
-import { ErrorForbidden } from "@/pages/ErrorForbidden";
+import { ErrorForbidden } from "@/shared/pages/ErrorForbidden";
 import { Loader } from "@/shared/Loader";
-import { Button } from "@mui/material";
-import Link from "next/link";
-import React from "react";
 
 export const AdminMiddleware = ({ children }: any) => {
   const user = useAppSelector(selectAuth).user as UserState;

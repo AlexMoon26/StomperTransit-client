@@ -1,6 +1,7 @@
 "use client";
 import { selectAuth } from "@/GlobalRedux/Features/authSlice";
 import { useAppSelector } from "@/GlobalRedux/hooks";
+import { Loader } from "@/shared/Loader";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -17,7 +18,7 @@ export const AuthMiddleware = ({ children }) => {
   }, [token, router]);
 
   if (isLoading) {
-    return <h2>Загрузка...</h2>;
+    return <Loader />;
   }
   return <>{children}</>;
 };

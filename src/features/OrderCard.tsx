@@ -29,9 +29,9 @@ export const OrderCard = ({
     <>
       <div
         className={`flex w-full text-xs md:text-sm xxl:text-lg border-l-[8px] rounded-l shadow  ${
-          status === "pending"
+          status === "В ожидании"
             ? "border-l-red-400"
-            : status === "active"
+            : status === "Выполняется"
             ? "border-l-green-500"
             : "border-l-gray-400"
         }  p-5 rounded bg-white`}
@@ -52,11 +52,11 @@ export const OrderCard = ({
             <span className="font-normal leading-tight  dark:text-gray-400"></span>
           </li>
           <li className="flex space-x-3 items-center">
-            {status === "pending" ? (
+            {status === "В ожидании" ? (
               <span className="font-normal leading-tight hover:cursor-pointer dark:text-green-400">
                 Выбрать водителя
               </span>
-            ) : status === "active" ? (
+            ) : status === "Выполняется" ? (
               <>
                 <span className="font-normal leading-tight  dark:text-green-400">
                   Водитель - {driverName}
@@ -77,7 +77,7 @@ export const OrderCard = ({
           <div className="flex flex-col gap-2">
             <div className="flex gap-4 justify-end">
               <h5 className="font-normal text-gray-500 dark:text-gray-400">
-                {dayjs(date).format("DD.MM.YY mm:ss")}
+                {dayjs(date).format("DD.MM.YY HH:mm")}
               </h5>
               <Image
                 src="/images/icons/clock.svg"
@@ -93,7 +93,7 @@ export const OrderCard = ({
             </div>
           </div>
 
-          {status === "active" ? (
+          {status === "Выполняется" ? (
             <div className="flex gap-4 justify-end">
               <button onClick={handleOpenTransit}>
                 <Image
@@ -106,7 +106,7 @@ export const OrderCard = ({
               </button>
             </div>
           ) : null}
-          {status === "pending" ? (
+          {status === "В ожидании" ? (
             <div className="flex gap-4 justify-end">
               <button type="button" onClick={handleOpenEdit}>
                 <Image

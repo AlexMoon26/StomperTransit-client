@@ -6,7 +6,7 @@ export const Loader = () => {
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       height="100vh"
-      width="100vw"
+      width="100%"
     >
       <CircularProgress />
     </Box>

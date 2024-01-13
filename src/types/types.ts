@@ -1,9 +1,17 @@
 import dayjs from "dayjs";
 
+interface IProps {
+	name: string;
+	imgUser: string;
+	countOrder: number;
+	status: string;
+	rating?: number;
+}
+
 export interface TableProps {
-	data: [],
-	clients: Boolean,
-	drivers: Boolean
+	data: Array<IProps>,
+	clients?: Boolean,
+	drivers?: Boolean
 }
 
 export interface InputProps {

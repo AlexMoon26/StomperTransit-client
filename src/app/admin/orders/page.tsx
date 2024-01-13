@@ -15,30 +15,37 @@ const OrdersPage = () => {
   const dispatch = useAppDispatch();
   const [getAllOrder, { data, isSuccess, isError }] = useGetAllOrdersMutation();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        await getAllOrder({});
-      } catch (error) {
-        console.error("Произошла ошибка при получении заявок:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      await getAllOrder({});
+    } catch (error) {
+      console.error("Произошла ошибка при получении заявок:", error);
+    }
+  };
 
-    fetchUserData();
-  }, [getAllOrder]);
-
-  useEffect(() => {
+  const handleSuccess = () => {
     if (isSuccess && data) {
+      console.log(data);
       dispatch(setAllOrders(data));
     }
+  };
+
+  const handleError = () => {
     if (isError) {
       dispatch(removeLoading());
     }
-  }, [isSuccess, data, dispatch, isError]);
+  };
 
-  const orders = useAppSelector(selectOrders).orders;
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const isLoading = useAppSelector(selectOrders).isLoading;
+  useEffect(() => {
+    handleSuccess();
+    handleError();
+  }, [isSuccess, data, isError]);
+
+  const { orders, isLoading } = useAppSelector(selectOrders);
 
   if (isLoading) {
     return <Loader />;
@@ -46,7 +53,20 @@ const OrdersPage = () => {
 
   return (
     <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
-      {orders && orders.map(() => {})}
+      {orders?.map((order, i) => (
+        <OrderCard
+          clientName={order.client.firstName}
+          pointA={order.pointA}
+          pointB={order.pointB}
+          date={order.createdAt}
+          weight={order.weight!}
+          status={order.status}
+          key={i}
+          driverName={`${order.driver?.firstName || ""} ${
+            order.driver?.surName || ""
+          }`}
+        />
+      ))}
     </div>
   );
 };

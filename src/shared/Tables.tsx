@@ -3,14 +3,6 @@ import { useState } from "react";
 import { InputSearch } from "./inputs/InputSearch";
 import { TableProps } from "@/types/types";
 
-interface IProps {
-  name: string;
-  imgUser: string;
-  countOrder: number;
-  status: string;
-  rating: number;
-}
-
 export const Tables = ({ data, clients, drivers }: TableProps) => {
   const [filterByName, setFilterByName] = useState(false);
   const [filterByStatus, setFilterByStatus] = useState(false);
@@ -49,7 +41,7 @@ export const Tables = ({ data, clients, drivers }: TableProps) => {
     setFilterByStatus(false);
   };
 
-  const sortedData: IProps[] = [...data];
+  const sortedData = [...data];
 
   const filteredData = filterByName
     ? sortedData.slice().sort((a, b) => a.name.localeCompare(b.name))
@@ -66,7 +58,7 @@ export const Tables = ({ data, clients, drivers }: TableProps) => {
         }
       })
     : filterByRating
-    ? sortedData.slice().sort((a, b) => b.rating - a.rating)
+    ? sortedData.slice().sort((a, b) => b.rating! - a.rating!)
     : sortedData;
 
   return (
@@ -150,7 +142,7 @@ export const Tables = ({ data, clients, drivers }: TableProps) => {
                     <div className="flex items-center gap-2">
                       <div className="h-[30px] w-[30px] rounded-full">
                         <img
-                          src={item.imgUser || '/images/profile.png'}
+                          src={item.imgUser || "/images/profile.png"}
                           className="h-full w-full rounded-full"
                           alt=""
                         />

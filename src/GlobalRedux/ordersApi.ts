@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ordersApi = createApi({
-    reducerPath: "authApi",
+    reducerPath: "ordersApi",
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_APP_API_URL
     }),
@@ -21,7 +21,7 @@ export const ordersApi = createApi({
         getAllOrders: builder.mutation({
             query: () => {
                 return {
-                    url: "/orders/createOrder",
+                    url: "/orders/allOrders",
                     method: "get",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`

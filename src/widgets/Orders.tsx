@@ -10,7 +10,7 @@ export const Orders = () => {
         pointB={"г.Краснодар, ул.Северная, 12"}
         weight={150}
         date={"2023-14-10:23:12"}
-        status={"pending"}
+        status={"В ожидании"}
       />
       <OrderCard
         clientName={"Вороненко Александр"}
@@ -18,7 +18,7 @@ export const Orders = () => {
         pointB={"г.Краснодар, ул.Северная, 12"}
         weight={150}
         date={"2023-14-10"}
-        status={"pending"}
+        status={"В ожидании"}
       />
       <OrderCard
         clientName={"Вороненко Александр"}
@@ -26,7 +26,7 @@ export const Orders = () => {
         pointB={"г.Краснодар, ул.Северная, 12"}
         weight={150}
         date={"2023-14-10"}
-        status={"pending"}
+        status={"В ожидании"}
       />
     </>
   );

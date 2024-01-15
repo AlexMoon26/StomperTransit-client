@@ -25,7 +25,6 @@ const OrdersPage = () => {
 
   const handleSuccess = () => {
     if (isSuccess && data) {
-      console.log(data);
       dispatch(setAllOrders(data));
     }
   };
@@ -55,7 +54,9 @@ const OrdersPage = () => {
     <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
       {orders?.map((order, i) => (
         <OrderCard
-          clientName={order.client.firstName}
+          clientName={`${order.client?.firstName || ""} ${
+            order.client?.surName || ""
+          }`}
           pointA={order.pointA}
           pointB={order.pointB}
           date={order.createdAt}

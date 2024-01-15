@@ -7,7 +7,7 @@ export const ordersApi = createApi({
     }),
     endpoints: (builder) => ({
         createOrder: builder.mutation({
-            query: (body: { client: Object; pointA: string; pointB: string; weight: number }) => {
+            query: (body: { phone: string; pointA: string; pointB: string; weight: number }) => {
                 return {
                     url: "/orders/createOrder",
                     method: "post",

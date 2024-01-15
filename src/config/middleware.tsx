@@ -21,7 +21,7 @@ export const Middleware = ({ children }) => {
     };
 
     fetchUserData();
-  }, [getMe]);
+  }, []);
 
   useEffect(() => {
     if (isSuccess && data) {

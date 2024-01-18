@@ -27,10 +27,6 @@ export default function RootLayout({ children }) {
           href="/images/favicon.ico"
           type="image/x-icon"
         />
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        />
       </head>
       <body className={`${inter.className} text-xs md:text-sm xxl:text-lg`}>
         <Providers>

@@ -122,7 +122,7 @@ export const OrderCard = ({
           pointA={pointA}
           pointB={pointB}
           weight={weight}
-          onUpdate={() => onUpdate && onUpdate()}
+          onUpdate={() => onUpdate()}
         />
       )}
     </>

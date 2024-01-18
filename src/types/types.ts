@@ -21,18 +21,27 @@ export interface InputProps {
 }
 
 export interface ApplicationProps {
+	id: string;
 	clientName: string;
 	date: string;
 	pointA: string;
 	pointB: string;
 	weight: number;
-	status: string;
+	status: OrderStatus;
 	driverName?: string;
-	driverStatus?: string
+	driverStatus?: string;
+	onDelete: () => void;
+	onUpdate: () => void;
 }
 
 export interface IUser {
 	id: number;
 	name: string;
 	email: string;
+}
+
+export enum OrderStatus {
+	Pending = "В ожидании",
+	InProgress = "Выполняется",
+	Completed = "Выполнена"
 }

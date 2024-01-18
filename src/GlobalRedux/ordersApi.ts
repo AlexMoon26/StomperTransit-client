@@ -1,3 +1,4 @@
+import { OrderStatus } from "@/types/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const ordersApi = createApi({
@@ -9,7 +10,7 @@ export const ordersApi = createApi({
         createOrder: builder.mutation({
             query: (body: { phone: string; pointA: string; pointB: string; weight: number }) => {
                 return {
-                    url: "/orders/createOrder",
+                    url: "/orders/order/create",
                     method: "post",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -29,7 +30,31 @@ export const ordersApi = createApi({
                 }
             }
         }),
+        deleteOrder: builder.mutation({
+            query: (body: { id: string }) => {
+                return {
+                    url: `/orders/order/${body.id}`,
+                    method: "delete",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body
+                }
+            }
+        }),
+        updateOrder: builder.mutation({
+            query: (body: { updatedFields: { id?: string, status?: OrderStatus, pointA?: string, pointB?: string, weight?: number } }) => {
+                return {
+                    url: `/orders/order/${body.updatedFields.id}`,
+                    method: "put",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
+                    body
+                }
+            }
+        }),
     })
 });
 
-export const { useCreateOrderMutation, useGetAllOrdersMutation } = ordersApi;
+export const { useCreateOrderMutation, useGetAllOrdersMutation, useDeleteOrderMutation, useUpdateOrderMutation } = ordersApi;

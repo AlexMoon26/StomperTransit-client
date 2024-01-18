@@ -2,11 +2,11 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import ModalEditOrder from "./Modals/ModalEditOrder";
-import ModalTransitOrder from "./Modals/ModalTransitOrder";
-import { ApplicationProps } from "@/types/types";
+import { ApplicationProps, OrderStatus } from "@/types/types";
 import dayjs from "dayjs";
 
 export const OrderCard = ({
+  id,
   clientName,
   pointA,
   pointB,
@@ -15,23 +15,21 @@ export const OrderCard = ({
   status,
   driverName,
   driverStatus,
+  onDelete,
+  onUpdate,
 }: ApplicationProps) => {
   const [openEdit, setOpenEdit] = useState(false);
-  const [openTransit, setOpenTransit] = useState(false);
 
   const handleOpenEdit = () => setOpenEdit(true);
   const handleCloseEdit = () => setOpenEdit(false);
-
-  const handleOpenTransit = () => setOpenTransit(true);
-  const handleCloseTransit = () => setOpenTransit(false);
 
   return (
     <>
       <div
         className={`flex w-full text-xs md:text-sm xxl:text-lg border-l-[8px] rounded-l shadow  ${
-          status === "В ожидании"
+          status === OrderStatus.Pending
             ? "border-l-red-400"
-            : status === "Выполняется"
+            : status === OrderStatus.InProgress
             ? "border-l-green-500"
             : "border-l-gray-400"
         }  p-5 rounded bg-white`}
@@ -52,11 +50,11 @@ export const OrderCard = ({
             <span className="font-normal leading-tight  dark:text-gray-400"></span>
           </li>
           <li className="flex space-x-3 items-center">
-            {status === "В ожидании" ? (
+            {status === OrderStatus.Pending ? (
               <span className="font-normal leading-tight hover:cursor-pointer dark:text-green-400">
                 Выбрать водителя
               </span>
-            ) : status === "Выполняется" ? (
+            ) : status === OrderStatus.InProgress ? (
               <>
                 <span className="font-normal leading-tight  dark:text-green-400">
                   Водитель - {driverName}
@@ -92,53 +90,39 @@ export const OrderCard = ({
               </span>
             </div>
           </div>
-
-          {status === "Выполняется" ? (
-            <div className="flex gap-4 justify-end">
-              <button onClick={handleOpenTransit}>
-                <Image
-                  className="hover:cursor-pointer"
-                  src="/images/icons/transit.svg"
-                  width={20}
-                  height={20}
-                  alt="Перенос-заявки"
-                />
-              </button>
-            </div>
-          ) : null}
-          {status === "В ожидании" ? (
-            <div className="flex gap-4 justify-end">
-              <button type="button" onClick={handleOpenEdit}>
-                <Image
-                  className="hover:cursor-pointer"
-                  src="/images/icons/edit.svg"
-                  width={20}
-                  height={20}
-                  alt="Изменение-заявки"
-                />
-              </button>
-            </div>
-          ) : null}
+          <div className="flex gap-4 justify-end">
+            <button type="button" onClick={onDelete}>
+              <Image
+                className="hover:cursor-pointer"
+                src="/images/icons/trash.svg"
+                width={20}
+                height={20}
+                alt="Изменение-заявки"
+              />
+            </button>
+            <button type="button" onClick={handleOpenEdit}>
+              <Image
+                className="hover:cursor-pointer"
+                src="/images/icons/edit.svg"
+                width={20}
+                height={20}
+                alt="Изменение-заявки"
+              />
+            </button>
+          </div>
         </div>
       </div>
       {openEdit && (
         <ModalEditOrder
           changeStateModal={handleCloseEdit}
           open={openEdit}
+          id={id}
           clientName={clientName}
           status={status}
           pointA={pointA}
           pointB={pointB}
           weight={weight}
-        />
-      )}
-      {openTransit && (
-        <ModalTransitOrder
-          changeStateModal={handleCloseTransit}
-          openTransit={openTransit}
-          clientName={clientName}
-          status={status}
-          date={date}
+          onUpdate={() => onUpdate()}
         />
       )}
     </>

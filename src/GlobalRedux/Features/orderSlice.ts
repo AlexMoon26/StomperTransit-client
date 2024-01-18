@@ -1,5 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { string } from "yup";
+import { OrderStatus } from "@/types/types";
 
 interface IUserProps {
     _id: string;
@@ -13,11 +15,12 @@ interface IUserProps {
 }
 
 interface IOrder {
+    _id: string;
     client: IUserProps;
     pointA: string;
     pointB: string;
     weight: number | null;
-    status: string;
+    status: OrderStatus;
     createdAt: string;
     driverStatus: string;
     driver?: IUserProps
@@ -31,6 +34,7 @@ export interface OrdersState {
 
 const initialState: OrdersState = {
     orders: [{
+        _id: "",
         client: {
             _id: "",
             firstName: "",
@@ -43,7 +47,7 @@ const initialState: OrdersState = {
         pointA: "",
         pointB: "",
         weight: null,
-        status: "",
+        status: OrderStatus.Pending,
         createdAt: "",
         driverStatus: ""
 

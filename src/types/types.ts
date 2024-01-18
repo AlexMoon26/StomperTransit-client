@@ -30,8 +30,8 @@ export interface ApplicationProps {
 	status: OrderStatus;
 	driverName?: string;
 	driverStatus?: string;
-	onDelete: () => void;
-	onUpdate: () => void;
+	onDelete?: () => void;
+	onUpdate?: () => void;
 }
 
 export interface IUser {

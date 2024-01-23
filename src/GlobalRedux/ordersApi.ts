@@ -19,14 +19,15 @@ export const ordersApi = createApi({
                 }
             }
         }),
-        getAllOrders: builder.mutation({
-            query: () => {
+        getAllOrders: builder.query({
+            query: (params) => {
                 return {
                     url: "/orders/allOrders",
                     method: "get",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    }
+                    },
+                    params,
                 }
             }
         }),
@@ -57,4 +58,4 @@ export const ordersApi = createApi({
     })
 });
 
-export const { useCreateOrderMutation, useGetAllOrdersMutation, useDeleteOrderMutation, useUpdateOrderMutation } = ordersApi;
+export const { useCreateOrderMutation, useGetAllOrdersQuery, useDeleteOrderMutation, useUpdateOrderMutation } = ordersApi;

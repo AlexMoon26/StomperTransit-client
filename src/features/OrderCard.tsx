@@ -122,6 +122,7 @@ export const OrderCard = ({
           pointA={pointA}
           pointB={pointB}
           weight={weight}
+          driverName={driverName}
           onUpdate={() => onUpdate && onUpdate()}
         />
       )}

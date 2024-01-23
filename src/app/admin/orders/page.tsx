@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import {
   useDeleteOrderMutation,
-  useGetAllOrdersMutation,
+  useGetAllOrdersQuery,
 } from "@/GlobalRedux/ordersApi";
 import { useAppDispatch, useAppSelector } from "@/GlobalRedux/hooks";
 import {
@@ -19,16 +19,8 @@ import { Box, Typography } from "@mui/material";
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
 
-  const [getAllOrder, { data, isSuccess, isError }] = useGetAllOrdersMutation();
+  const { data, isSuccess, isError, refetch } = useGetAllOrdersQuery("");
   const [deleteOrder] = useDeleteOrderMutation();
-
-  const fetchData = async () => {
-    try {
-      await getAllOrder({});
-    } catch (error) {
-      console.error("Произошла ошибка при получении заявок:", error);
-    }
-  };
 
   const handleSuccess = () => {
     if (isSuccess && data) {
@@ -43,18 +35,22 @@ const OrdersPage = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     handleSuccess();
     handleError();
   }, [isSuccess, data, isError]);
 
+  const handleUpdateOrder = async () => {
+    await refetch();
+  };
+
   const handleDeleteOrder = async (id) => {
-    await deleteOrder({ id });
-    toast.success("Заявка успешно удалена!");
-    fetchData();
+    try {
+      await deleteOrder({ id });
+      toast.success("Заявка успешно удалена!");
+      refetch();
+    } catch (error) {
+      toast.error("Ошибка при удалении заявки!");
+    }
   };
 
   const { orders, isLoading } = useAppSelector(selectOrders);
@@ -82,7 +78,7 @@ const OrdersPage = () => {
               order.driver?.surName || ""
             }`}
             onDelete={() => handleDeleteOrder(order._id)}
-            onUpdate={() => fetchData()}
+            onUpdate={() => handleUpdateOrder()}
           />
         ))}
       </div>

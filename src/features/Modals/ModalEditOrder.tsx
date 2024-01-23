@@ -6,6 +6,11 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useUpdateOrderMutation } from "@/GlobalRedux/ordersApi";
 import { OrderStatus } from "@/types/types";
+import { InputAutocompleteUsers } from "@/shared/inputs/InputAutocompleteUsers";
+import { useGetAllClientsMutation } from "@/GlobalRedux/usersApi";
+import { useEffect } from "react";
+import { useAppDispatch } from "@/GlobalRedux/hooks";
+import { removeLoading, setUsers } from "@/GlobalRedux/Features/usersSlice";
 
 interface IProps {
   pointA: string;
@@ -15,6 +20,7 @@ interface IProps {
   weight: number;
   status: OrderStatus;
   open: boolean;
+  driverName?: string;
   changeStateModal: () => void;
   onUpdate: () => void;
 }
@@ -22,6 +28,7 @@ interface IProps {
 const validationSchema = Yup.object().shape({
   updatedFields: Yup.object().shape({
     id: Yup.string().required(),
+    driver: Yup.string(),
     status: Yup.string().required("Статус обязателен"),
     pointA: Yup.string().required("Точка A обязательна"),
     pointB: Yup.string().required("Точка B обязательна"),
@@ -40,9 +47,14 @@ const ModalEditOrder = ({
   id,
   pointB,
   weight,
+  driverName,
   onUpdate,
 }: IProps) => {
+  const dispatch = useAppDispatch();
   const [updateOrder] = useUpdateOrderMutation();
+
+  const [getAllClients, { data, isSuccess, isError }] =
+    useGetAllClientsMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -52,21 +64,45 @@ const ModalEditOrder = ({
         pointA: pointA,
         pointB: pointB,
         weight: weight,
+        driver: driverName,
       },
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        updateOrder(values);
+        await updateOrder(values).then(() =>
+          toast.success("Заявка успешно изменена!")
+        );
         changeStateModal();
-        onUpdate();
-        toast.success("Заявка успешно изменена!");
+        await onUpdate();
       } catch (err) {
         console.log(err);
         toast.error("Заявка не была изменена!");
       }
     },
   });
+
+  useEffect(() => {
+    const fetchUsersData = async () => {
+      try {
+        await getAllClients({});
+      } catch (error) {
+        console.error("Произошла ошибка при получении данных", error);
+      }
+    };
+
+    fetchUsersData();
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      dispatch(setUsers(data));
+    }
+    if (isError) {
+      dispatch(removeLoading());
+    }
+  }, [isSuccess, data, dispatch, isError]);
+
   return (
     <Modal
       open={open}
@@ -96,8 +132,24 @@ const ModalEditOrder = ({
             <div className="flex gap-5 mb-5">
               <Typography className="">Клиент - {clientName}</Typography>
               <div className="flex items-center">
-                <span className="inline-flex items-center bg-red-100 text-red-700 text-md font-medium mr-2 px-2.5 py-0.5 rounded-full">
-                  <span className="w-2 h-2 mr-1 rounded-full bg-red-400"></span>
+                <span
+                  className={`inline-flex items-center  ${
+                    status === OrderStatus.Pending && "text-red-700 bg-red-100"
+                  } ${
+                    status === OrderStatus.InProgress &&
+                    "text-green-700 bg-green-100"
+                  } ${
+                    status === OrderStatus.Completed &&
+                    "text-gray-700 bg-gray-100"
+                  } text-md font-medium mr-2 px-2.5 py-0.5 rounded-full`}
+                >
+                  <span
+                    className={`w-2 h-2 mr-1 rounded-full ${
+                      status === OrderStatus.Pending && "bg-red-700"
+                    } ${status === OrderStatus.InProgress && "bg-green-700"} ${
+                      status === OrderStatus.Completed && "bg-gray-700"
+                    }`}
+                  ></span>
                   {status}
                 </span>
               </div>
@@ -119,15 +171,44 @@ const ModalEditOrder = ({
                   formik.errors.updatedFields?.status
                 }
               />
+              {formik.values.updatedFields.status === "Выполняется" && (
+                <InputAutocompleteUsers
+                  users={data}
+                  name="driver"
+                  onChange={(event, selectedPhone) => {
+                    formik.setFieldValue("updatedFields.driver", selectedPhone);
+                  }}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.updatedFields?.driver &&
+                    Boolean(formik.errors.updatedFields?.driver)
+                  }
+                  helperText={
+                    formik.touched.updatedFields?.driver &&
+                    formik.errors.updatedFields?.driver
+                  }
+                />
+              )}
 
               <TextField
                 label="Точка А"
                 name="pointA"
                 id="pointA"
                 placeholder="г.Краснодар, ул. Красная, 1"
-                value={formik.values.updatedFields.pointA}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                value={formik.values.updatedFields?.pointA}
+                onChange={(e) =>
+                  formik.handleChange({
+                    target: {
+                      name: "updatedFields.pointA",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                onBlur={() =>
+                  formik.handleBlur({
+                    target: { name: "updatedFields.pointA" },
+                  })
+                }
                 error={
                   formik.touched.updatedFields?.pointA &&
                   Boolean(formik.errors.updatedFields?.pointA)
@@ -143,8 +224,19 @@ const ModalEditOrder = ({
                 id="pointB"
                 placeholder="г.Краснодар, ул. Красная, 1"
                 value={formik.values.updatedFields.pointB}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onChange={(e) =>
+                  formik.handleChange({
+                    target: {
+                      name: "updatedFields.pointB",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                onBlur={() =>
+                  formik.handleBlur({
+                    target: { name: "updatedFields.pointB" },
+                  })
+                }
                 error={
                   formik.touched.updatedFields?.pointB &&
                   Boolean(formik.errors.updatedFields?.pointB)
@@ -159,8 +251,19 @@ const ModalEditOrder = ({
                 name="weight"
                 id="weight"
                 value={formik.values.updatedFields.weight}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                onChange={(e) =>
+                  formik.handleChange({
+                    target: {
+                      name: "updatedFields.weight",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                onBlur={() =>
+                  formik.handleBlur({
+                    target: { name: "updatedFields.weight" },
+                  })
+                }
                 error={
                   formik.touched.updatedFields?.weight &&
                   Boolean(formik.errors.updatedFields?.weight)

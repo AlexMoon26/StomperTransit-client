@@ -14,7 +14,7 @@ export const ButtonsAdminPage = () => {
   const generateReport = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.7:5000/reports/currentdate",
+        `${process.env.NEXT_PUBLIC_APP_API_URL}reports/currentdate`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

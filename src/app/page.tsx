@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import NextLink from "next/link";
 import { theme } from "@/theme/theme";
 import { Loader } from "@/shared/Loader";
+import { Header } from "@/widgets/Header";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -30,19 +31,16 @@ const Home = () => {
 
   return (
     <>
-      <Box
-        height="100vh"
-        width="100vw"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Box height="100vh" width="100vw">
+        <Header />
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
+            overflowX: "hidden",
           }}
           gap={2}
+          mt={20}
         >
           {user && user?._id !== null ? (
             <>

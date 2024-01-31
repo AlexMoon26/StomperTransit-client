@@ -17,7 +17,8 @@ const validationSchema = Yup.object({
   pointB: Yup.string().required("Точка B обязательна"),
   weight: Yup.number()
     .required("Вес обязателен")
-    .positive("Вес должен быть положительным числом"),
+    .positive("Вес должен быть положительным числом")
+    .max(10000, "Вес не должен превышать 10000кг"),
 });
 
 const ModalCreateApplication = ({ changeStateModal, open }) => {

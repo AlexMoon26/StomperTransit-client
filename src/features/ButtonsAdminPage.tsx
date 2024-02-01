@@ -15,7 +15,7 @@ export const ButtonsAdminPage = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_API_URL}reports/currentdate`,
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/reports/currentdate`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,23 +1,24 @@
 "use client";
 import React, { useState } from "react";
 import ModalCreateApplication from "./Modals/ModalCreateApplication";
+import LoadingButton from "@mui/lab/LoadingButton";
+import dayjs from "dayjs";
 import { Button } from "@mui/material";
 
 export const ButtonsAdminPage = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YTNmZDk1NWNhNzYxZWUxYzU0ZjUxOSIsImlhdCI6MTcwNjY4MDMzNn0.WHom9EaMJCy9Tm9bnYc3g8utLoDQaZlGq5ctFj_iVjM";
-
   const generateReport = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_API_URL}/reports/currentdate`,
+        `${process.env.NEXT_PUBLIC_APP_API_URL}reports/currentdate`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -27,7 +28,7 @@ export const ButtonsAdminPage = () => {
       // Создаем ссылку
       const a = document.createElement("a");
       a.href = url;
-      a.download = "report.pdf";
+      a.download = `report-${dayjs(Date.now()).format("DD-MM-YYYY-H-mm")}.pdf`;
 
       // Добавляем ссылку в DOM
       document.body.appendChild(a);
@@ -39,6 +40,8 @@ export const ButtonsAdminPage = () => {
       document.body.removeChild(a);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -50,12 +53,14 @@ export const ButtonsAdminPage = () => {
         >
           Создать заявку
         </Button>
-        <Button
+        <LoadingButton
+          loading={loading}
+          variant="contained"
           onClick={generateReport}
           className="items-center text-centerrounded shadow w-full justify-center "
         >
           Сформировать отчет
-        </Button>
+        </LoadingButton>
       </div>
       {open ? (
         <ModalCreateApplication changeStateModal={handleClose} open={open} />

@@ -85,3 +85,5 @@ export const names = [
     "Павел",
     "Ангелина"
 ];
+
+export const links = [{ name: "Главная", path: "/" }, { name: "Проекты", path: "/projects" }, { name: "Услуги", path: "/services" }, { name: "Блог", path: "/blog" }, { name: "Компания", path: "/company" },]

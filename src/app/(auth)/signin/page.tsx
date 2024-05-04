@@ -32,7 +32,10 @@ const Login = () => {
     validationSchema: validationLoginSchema,
     onSubmit: async (values) => {
       try {
-        await login(values);
+        const response = await login(values);
+        if (!response) {
+          throw new Error("Ошибка авторизации");
+        }
         toast.success("Успешная авторизация!");
         router.push("/");
       } catch (err) {

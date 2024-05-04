@@ -57,7 +57,6 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
         onClose={closeModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        className=""
       >
         <Box sx={boxModal} className="rounded-lg box-modal max-h-[90vh]">
           <Box className="flex justify-between items-center p-5 border-b">

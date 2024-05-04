@@ -5,11 +5,20 @@ import orders from "../../public/notification.svg";
 import clients from "../../public/clients.svg";
 import logout from "../../public/images/icons/logout.svg";
 import { toast } from "sonner";
+import { cookies } from "next/headers";
+import { authLogout } from "@/api/auth";
 
-export const Menu = ({ handleSidebarToggle }) => {
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    toast.success("Успешный выход!");
+export function Menu({ handleSidebarToggle }) {
+  const handleLogout = async () => {
+    try {
+      const response = await authLogout();
+      if (!response) {
+        throw new Error("Ошибка при выходе!");
+      }
+      toast.success("Успешный выход!");
+    } catch (err) {
+      toast.error(`${err}`);
+    }
   };
   return (
     <div className="px-3 py-4 overflow-y-auto ">
@@ -47,4 +56,4 @@ export const Menu = ({ handleSidebarToggle }) => {
       </ul>
     </div>
   );
-};
+}

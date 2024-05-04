@@ -9,6 +9,8 @@ import { theme } from "@/theme/theme";
 import { Toaster } from "sonner";
 import { ModalProvider } from "@/components/modalContext";
 import { Suspense } from "react";
+import { User } from "@/types";
+import { profile } from "@/api/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +19,8 @@ export const metadata = {
   description: "Грузоперевозки",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const user: User = await profile();
   return (
     <html lang="ru">
       <head>
@@ -35,6 +38,7 @@ export default function RootLayout({ children }) {
             </ModalProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
+
         <Toaster position="bottom-right" richColors theme="system" />
       </body>
     </html>

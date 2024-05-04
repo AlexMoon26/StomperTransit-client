@@ -10,7 +10,7 @@ export async function login(data: AuthFormSignIn) {
       body: JSON.stringify(data),
     });
 
-    const { token } = response;
+    const { token } = await response;
 
     if (!!token) {
       cookies().set("token", token, {
@@ -22,6 +22,11 @@ export async function login(data: AuthFormSignIn) {
   } catch (err) {
     return { ok: false, message: err };
   }
+}
+
+export async function authLogout() {
+  const response = cookies().delete("token");
+  return response;
 }
 
 export async function profile() {

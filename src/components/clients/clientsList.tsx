@@ -55,7 +55,7 @@ export function ClientsList({ clients }: Props) {
         <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
           {clients
             ? filteredClients?.map((client, i) => (
-                <ClientCard client={client} />
+                <ClientCard key={i} client={client} />
               ))
             : "Заявок нет"}
         </div>

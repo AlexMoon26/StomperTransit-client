@@ -5,6 +5,10 @@ import { Button } from "@mui/material";
 import { ModalContext } from "@/components/modalContext";
 import { CreateOrderForm } from "@/components/orders/modalForms/createOrderForm";
 
+const ReportForm = () => {
+  return <>123</>;
+};
+
 export const ButtonsAdminPage = () => {
   const { openModal, closeModal } = useContext(ModalContext);
 
@@ -12,11 +16,17 @@ export const ButtonsAdminPage = () => {
     openModal({
       component: CreateOrderForm,
       props: { closeModal },
-      title: "Создание новой  заявки",
+      title: "Создание новой заявки",
     });
   };
 
-  const generateReport = async () => {};
+  const generateReport = async () => {
+    openModal({
+      component: ReportForm,
+      props: { closeModal },
+      title: "Создание отчета",
+    });
+  };
   return (
     <>
       <div className="flex gap-4">

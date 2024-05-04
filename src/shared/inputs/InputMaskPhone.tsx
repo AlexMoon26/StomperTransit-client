@@ -15,6 +15,7 @@ interface IProps {
   onBlur?;
   error?;
   helperText?;
+  disabled?;
 }
 
 const TextMaskCustom = forwardRef(
@@ -47,6 +48,7 @@ const InputMaskPhone = ({
   onBlur,
   error,
   helperText,
+  disabled,
 }: IProps) => {
   return (
     <TextField
@@ -63,6 +65,7 @@ const InputMaskPhone = ({
       InputProps={{
         inputComponent: TextMaskCustom,
       }}
+      disabled
     />
   );
 };

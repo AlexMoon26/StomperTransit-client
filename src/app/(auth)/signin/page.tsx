@@ -14,21 +14,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useFormik } from "formik";
 import { validationLoginSchema } from "@/config/validation";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { useLoginUserMutation } from "@/GlobalRedux/authApi";
-import { useAppDispatch } from "@/GlobalRedux/hooks";
-import { setUser } from "@/GlobalRedux/Features/authSlice";
-
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import Link from "next/link";
 import Copyright from "@/shared/Copyright";
+import { login } from "@/api/auth";
 
 const Login = () => {
   const router = useRouter();
-  const [loginUser, { data, isSuccess, isError }] = useLoginUserMutation();
-  const dispatch = useAppDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -38,20 +32,14 @@ const Login = () => {
     validationSchema: validationLoginSchema,
     onSubmit: async (values) => {
       try {
-        await loginUser(values);
+        await login(values);
+        toast.success("Успешная авторизация!");
+        router.push("/");
       } catch (err) {
-        console.log(err);
+        toast.error(`${err}`);
       }
     },
   });
-
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(setUser({ token: data.token, user: data.user }));
-      toast.success("Успешная авторизация!");
-      router.push("/");
-    }
-  }, [isSuccess, data, dispatch, router]);
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
@@ -119,11 +107,6 @@ const Login = () => {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
-              {isError && (
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <p className="text-red-600">Неверный логин или пароль!</p>
-                </Box>
-              )}
               <Button
                 type="submit"
                 fullWidth

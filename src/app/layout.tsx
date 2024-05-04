@@ -1,15 +1,14 @@
-import { ThemeProvider } from "@mui/material";
+import { CircularProgress, ThemeProvider } from "@mui/material";
 import "./globals.css";
-import "react-toastify/dist/ReactToastify.css";
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 import { Inter } from "next/font/google";
 import { theme } from "@/theme/theme";
-import { Providers } from "@/GlobalRedux/provider";
 
-import { ToastContainer } from "react-toastify";
-import { Middleware } from "@/config/middleware";
+import { Toaster } from "sonner";
+import { ModalProvider } from "@/components/modalContext";
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,25 +28,14 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${inter.className} text-xs md:text-sm xxl:text-lg`}>
-        <Providers>
-          <Middleware>
-            <AppRouterCacheProvider>
-              <ThemeProvider theme={theme}>{children}</ThemeProvider>
-            </AppRouterCacheProvider>
-          </Middleware>
-        </Providers>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <ModalProvider>
+              <Suspense fallback={<CircularProgress />}>{children}</Suspense>
+            </ModalProvider>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
+        <Toaster position="bottom-right" richColors theme="system" />
       </body>
     </html>
   );

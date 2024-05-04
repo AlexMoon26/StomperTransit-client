@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 interface IProps {
   name: string;
   image?: string;
-  path: string;
-  handleSidebarToggle: () => void;
+  path?: string;
+  handleSidebarToggle?: () => void;
+  onClick?: () => void;
 }
 
 export const MenuItems = ({
@@ -15,6 +16,7 @@ export const MenuItems = ({
   image,
   path,
   handleSidebarToggle,
+  onClick,
 }: IProps) => {
   const pathname = usePathname();
 
@@ -25,7 +27,7 @@ export const MenuItems = ({
   return (
     <li>
       <Link
-        onClick={handleSidebarToggle}
+        onClick={onClick}
         href={`/${path}`}
         className={`flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group ${
           isCurrentPage(path)

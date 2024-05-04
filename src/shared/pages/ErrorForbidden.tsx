@@ -18,8 +18,8 @@ export const ErrorForbidden = () => {
           </Typography>
           <Typography textAlign="center">Доступ запрещен!</Typography>
         </Box>
-        <Button variant="contained" component={NextLink} href="/">
-          Вернуться на главную
+        <Button variant="contained" component={NextLink} href="/signin">
+          Авторизоваться
         </Button>
       </Box>
     </Box>

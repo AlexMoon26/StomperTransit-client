@@ -2,8 +2,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Profile } from "@/features/Profile";
 import { Menu } from "@/features/Menu";
+import { User } from "@/types";
 
-export const SideBar = () => {
+interface Props {
+  user: User;
+}
+
+export const SideBar = ({ user }: Props) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
 
@@ -67,7 +72,7 @@ export const SideBar = () => {
         }`}
         aria-label="Sidebar"
       >
-        <Profile />
+        <Profile user={user} />
         <div className="bg-green-500 h-1"></div>
         <Menu handleSidebarToggle={handleSidebarToggle} />
       </aside>

@@ -1,11 +1,13 @@
 import { MenuItems } from "@/shared/MenuItems";
 import React from "react";
-import home from "../../public/homeImg.svg";
-import orders from "../../public/notification.svg";
-import clients from "../../public/clients.svg";
-import logout from "../../public/images/icons/logout.svg";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import HomeIcon from "@mui/icons-material/Home";
+import PeopleIcon from "@mui/icons-material/People";
+import GroupsIcon from "@mui/icons-material/Groups";
+import PersonIcon from "@mui/icons-material/Person";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import Divider from "@mui/material/Divider";
 import { toast } from "sonner";
-import { cookies } from "next/headers";
 import { authLogout } from "@/api/auth";
 
 export function Menu({ handleSidebarToggle }) {
@@ -15,7 +17,7 @@ export function Menu({ handleSidebarToggle }) {
       if (!response) {
         throw new Error("Ошибка при выходе!");
       }
-      toast.success("Успешный выход!");
+      toast.success(`${response.message}`);
     } catch (err) {
       toast.error(`${err}`);
     }
@@ -25,31 +27,34 @@ export function Menu({ handleSidebarToggle }) {
       <ul className="space-y-2 font-medium">
         <MenuItems
           name={"Главная"}
-          image={home}
+          Icon={HomeIcon}
           path={"/"}
           handleSidebarToggle={handleSidebarToggle}
         />
+        <MenuItems name="Профиль" Icon={PersonIcon} path="profile" />
         <MenuItems
           name={"Заявки"}
-          image={orders}
+          Icon={NotificationsIcon}
           path={"orders"}
           handleSidebarToggle={handleSidebarToggle}
         />
         <MenuItems
           name={"Клиенты"}
-          image={clients}
+          Icon={GroupsIcon}
           path={"clients"}
           handleSidebarToggle={handleSidebarToggle}
         />
         <MenuItems
           name={"Водители"}
-          image={clients}
+          Icon={PeopleIcon}
           path={"drivers"}
           handleSidebarToggle={handleSidebarToggle}
         />
+
+        <Divider className="bg-white" variant="middle" component="li" />
         <MenuItems
           name="Выйти"
-          image={logout}
+          Icon={ExitToAppIcon}
           onClick={handleLogout}
           path="signin"
         />

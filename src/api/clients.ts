@@ -20,3 +20,13 @@ export async function createClient(client: User) {
 
   return response;
 }
+
+export async function updateClient(client: User, id: string) {
+  const response = await apiFetch(`users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(client),
+  });
+  revalidatePath("/clients");
+
+  return response;
+}

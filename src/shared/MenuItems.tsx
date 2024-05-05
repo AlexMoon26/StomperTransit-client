@@ -1,24 +1,19 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconTypeMap } from "@mui/material";
 
 interface IProps {
   name: string;
-  image?: string;
+  Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string };
   path?: string;
   handleSidebarToggle?: () => void;
   onClick?: () => void;
 }
 
-export const MenuItems = ({
-  name,
-  image,
-  path,
-  handleSidebarToggle,
-  onClick,
-}: IProps) => {
+export const MenuItems = ({ name, path, Icon, onClick }: IProps) => {
   const pathname = usePathname();
 
   const isCurrentPage = (page) => {
@@ -36,9 +31,8 @@ export const MenuItems = ({
             : "text-gray-400"
         }`}
       >
-        {image && (
-          <Image src={image} alt={name} className="w-6 h-6 fill-red-600" />
-        )}
+        {Icon && <Icon className="text-white" />}
+
         <span className="ml-3">{name}</span>
       </Link>
     </li>

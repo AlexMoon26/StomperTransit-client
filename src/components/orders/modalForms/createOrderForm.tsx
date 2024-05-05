@@ -82,15 +82,19 @@ export function CreateOrderForm({ closeModal }: Props) {
     if (formik.values.weight > 100) {
       formik.setFieldValue("typeOfCar", "cargo");
     }
+    if (formik.values.weight < 100) {
+      formik.setFieldValue("typeOfCar", "express");
+    }
     if (formik.values.weight < 300) {
       formik.setFieldValue("bodySize", "S");
+      formik.setFieldValue("movers", null);
     }
     if (formik.values.weight > 300) {
       formik.setFieldValue("bodySize", "M");
+      formik.setFieldValue("movers", 1);
     }
     if (formik.values.weight > 700) {
       formik.setFieldValue("bodySize", "L");
-      formik.setFieldValue("movers", 1);
     }
     if (formik.values.weight > 1500) {
       formik.setFieldValue("bodySize", "XL");

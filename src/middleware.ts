@@ -18,13 +18,6 @@ export default async function middleware(req: NextRequest) {
 
     const role = response.role;
 
-    if (!role) {
-      return NextResponse.redirect(new URL("/signin", req.url));
-    }
-    const allowedPaths = ["/", "/orders", "/clients", "/drivers"];
-    if (!allowedPaths.includes(req.nextUrl.pathname)) {
-      return NextResponse.redirect(new URL("/signin", req.url));
-    }
     if (role === "admin") {
       return NextResponse.next();
     } else {

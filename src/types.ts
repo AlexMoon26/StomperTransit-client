@@ -56,7 +56,7 @@ export interface User {
   ordersMade: number;
 }
 
-export interface Admin extends User {
+export interface UserFull extends User {
   _id: string;
   password?: string;
   picturePath: string;

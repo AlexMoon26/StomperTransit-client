@@ -14,7 +14,9 @@ export const Orders = ({ orders }: Props) => {
           Нет заявок в ожидании
         </Box>
       )}
-      {orders && orders?.map((order, i) => <OrderCard key={i} order={order} />)}
+      {orders &&
+        orders.length > 0 &&
+        orders?.map((order, i) => <OrderCard key={i} order={order} />)}
     </>
   );
 };

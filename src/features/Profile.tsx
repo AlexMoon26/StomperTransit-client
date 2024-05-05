@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
 import { Avatar } from "@/shared/Avatar";
-import { Admin } from "@/types";
+import { UserFull } from "@/types";
 
 interface Props {
-  user: Admin;
+  user: UserFull;
 }
 
 export const Profile = ({ user }: Props) => {

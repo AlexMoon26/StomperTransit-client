@@ -10,10 +10,39 @@ export async function login(data: AuthFormSignIn) {
       body: JSON.stringify(data),
     });
 
-    const { token } = await response;
+    const { token, user } = await response;
 
-    if (!!token) {
+    if (!!token && user) {
       cookies().set("token", token, {
+        expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      cookies().set("role", user.role, {
+        expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+    }
+    return response;
+  } catch (err) {
+    return { ok: false, message: err };
+  }
+}
+
+export async function register(data: AuthFormSignIn) {
+  try {
+    const response = await apiFetch("auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    const { token, user } = await response;
+
+    if (!!token && user) {
+      cookies().set("token", token, {
+        expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      cookies().set("user", user, {
         expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
@@ -25,8 +54,9 @@ export async function login(data: AuthFormSignIn) {
 }
 
 export async function authLogout() {
-  const response = cookies().delete("token");
-  return response;
+  cookies().delete("token");
+  cookies().delete("role");
+  return { message: "Успешный выход" };
 }
 
 export async function profile() {

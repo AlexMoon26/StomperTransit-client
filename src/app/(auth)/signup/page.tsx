@@ -25,51 +25,33 @@ import { toast } from "sonner";
 import { names } from "@/data/data";
 import Copyright from "@/shared/Copyright";
 import Link from "next/link";
+import { register } from "@/api/auth";
 
 const Signup = () => {
-  // const [registerUser, { data, isSuccess, isError }] =
-  //   useRegisterUserMutation();
-  // const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  // const router = useRouter();
-
-  // const { token } = useAppSelector(selectAuth);
-
-  // const formik = useFormik({
-  //   initialValues: {
-  //     firstName: "",
-  //     surName: "",
-  //     email: "",
-  //     phone: "",
-  //     password: "",
-  //   },
-  //   validationSchema: validationRegSchema,
-  //   onSubmit: async (values) => {
-  //     try {
-  //       await registerUser(values);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   },
-  // });
-
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     dispatch(setUser({ token: data.token, user: data.user }));
-  //     toast.success("Успешная регистрация!");
-  //     router.push("/");
-  //   }
-  // }, [isSuccess, data, dispatch, router]);
-
-  // useEffect(() => {
-  //   if (token) {
-  //     router.push("/");
-  //   }
-  // }, [token, router]);
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      surName: "",
+      email: "",
+      phone: "",
+      password: "",
+    },
+    validationSchema: validationRegSchema,
+    onSubmit: async (values) => {
+      try {
+        await register(values);
+        router.push("/");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  });
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
-      {/* <CssBaseline />
+      <CssBaseline />
       <Grid
         item
         xs={false}
@@ -207,7 +189,7 @@ const Signup = () => {
             <Copyright sx={{ mt: 5 }} />
           </Box>
         </Box>
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 };

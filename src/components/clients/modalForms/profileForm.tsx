@@ -29,6 +29,12 @@ export function ProfileForm({ client, closeModal }: Props) {
       />
       <TextField
         disabled
+        label="Количество заказов"
+        className="w-full"
+        value={client.ordersMade}
+      />
+      <TextField
+        disabled
         label="Почта"
         className="w-full"
         value={client.email}

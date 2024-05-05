@@ -169,7 +169,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
               id="driver"
               options={drivers}
               isOptionEqualToValue={(option, value) =>
-                option._id === value?._id
+                option.firstName === value?.firstName
               }
               value={formik.values.driver}
               onChange={(e, value) => formik.setFieldValue("driver", value)}

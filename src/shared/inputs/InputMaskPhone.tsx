@@ -65,7 +65,7 @@ const InputMaskPhone = ({
       InputProps={{
         inputComponent: TextMaskCustom,
       }}
-      disabled
+      disabled={disabled}
     />
   );
 };

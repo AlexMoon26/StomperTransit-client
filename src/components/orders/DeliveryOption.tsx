@@ -25,10 +25,10 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
 }) => {
   return (
     <Box
-      onClick={() => formik.setFieldValue("typeOfCar", value)}
       sx={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "center",
         padding: 3,
         borderRadius: 4,
         cursor: "pointer",
@@ -36,6 +36,7 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
           ? { backgroundColor: "#f5f5f5" }
           : {}),
       }}
+      onClick={() => formik.setFieldValue("typeOfCar", value)}
     >
       <img
         src={image}

@@ -3,6 +3,7 @@ import { useScreenWidth } from "@/hooks/useScreenWidth";
 import { User } from "@/types";
 import {
   Box,
+  Button,
   IconButton,
   InputAdornment,
   Select,
@@ -10,25 +11,36 @@ import {
   Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ClientCard } from "./clientCard";
+import { ModalContext } from "../modalContext";
+import { CreateClientForm } from "./modalForms/createClientForm";
 
 interface Props {
   clients: User[];
 }
 
 export function ClientsList({ clients }: Props) {
+  const { openModal, closeModal } = useContext(ModalContext);
   const [searchTerm, setSearchTerm] = useState("");
   const { isDesktop } = useScreenWidth();
-  const filteredClients = clients
-    ? clients.filter((item) => {
-        const searchTextLower = searchTerm.toLowerCase();
-        return (
-          item.firstName.toLowerCase().includes(searchTextLower) ||
-          item.surName?.toLowerCase().includes(searchTextLower)
-        );
-      })
-    : [];
+
+  const handleNewClient = () => {
+    openModal({
+      component: CreateClientForm,
+      props: { closeModal },
+      title: "Создание нового клиента",
+    });
+  };
+  const searchTextLower = searchTerm.toLowerCase().split(" ");
+  const filteredClients = clients.filter((item) => {
+    const firstNameLower = item.firstName.toLowerCase();
+    const surNameLower = item.surName?.toLowerCase();
+
+    return searchTextLower.some((word) => {
+      return firstNameLower.includes(word) || surNameLower?.includes(word);
+    });
+  });
   return (
     <>
       <Box display="flex" flexDirection="column" className="gap-4">
@@ -51,6 +63,12 @@ export function ClientsList({ clients }: Props) {
           />
         </Box>
       </Box>
+      <Box className="mb-4">
+        <Button onClick={handleNewClient} fullWidth>
+          Добавить клиента
+        </Button>
+      </Box>
+
       {filteredClients.length > 0 ? (
         <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
           {clients

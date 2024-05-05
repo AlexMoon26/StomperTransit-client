@@ -3,13 +3,14 @@ import { LatestCustomers } from "@/features/LatestCustomers";
 import { Orders } from "@/widgets/Orders";
 import { ButtonsAdminPage } from "@/features/ButtonsAdminPage";
 import { getPendingOrders } from "@/api/orders";
+import { Donuts } from "@/widgets/Donuts";
 
 async function mainPage() {
   const orders = await getPendingOrders();
   return (
     <div>
       <div className="flex max-xl:flex-col max-xl:items-center justify-between  gap-4 mb-10">
-        {/* <Donuts /> */}
+        <Donuts />
 
         <div className="flex max-xl:w-full w-1/2 justify-end">
           <LatestCustomers

@@ -107,7 +107,9 @@ export function CreateOrderForm({ closeModal }: Props) {
             loading={!users.filter}
             loadingText="Поиск клиентов..."
             options={users}
-            isOptionEqualToValue={(option, value) => option._id === value?._id}
+            isOptionEqualToValue={(option, value) =>
+              option.firstName === value?.firstName
+            }
             value={formik.values.client}
             onChange={(e, value) => formik.setFieldValue("client", value)}
             getOptionLabel={(client) => `${client.firstName} ${client.surName}`}
@@ -167,36 +169,33 @@ export function CreateOrderForm({ closeModal }: Props) {
             <FormLabel className="mb-4">Тип доставки</FormLabel>
 
             <RadioGroup
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+              className=" gap-5"
               id="typeOfCar"
               value={formik.values.typeOfCar}
               onChange={formik.handleChange}
             >
-              {deliveryOptions.map((option) => (
-                <DeliveryOption
-                  key={option.value}
-                  {...option}
-                  formik={formik}
-                />
-              ))}
+              <div className="flex justify-center max-md:flex-col">
+                {deliveryOptions.map((option) => (
+                  <DeliveryOption
+                    key={option.value}
+                    {...option}
+                    formik={formik}
+                  />
+                ))}
+              </div>
             </RadioGroup>
           </FormControl>
 
           {formik.values.typeOfCar === "cargo" && (
             <>
-              <Box className="flex justify-between bg-gray-100 rounded-xl">
-                <Box className="flex flex-col w-1/2 justify-center items-center">
+              <Box className="flex justify-between max-md:flex-col bg-gray-100 rounded-xl">
+                <Box className="flex flex-col w-full p-5 justify-center items-center">
                   <Typography>{bodySizeMap[formik.values.bodySize]}</Typography>
                   <Typography className="text-gray-400" fontSize="small">
                     до {bodyWeightMap[formik.values.bodySize]} кг
                   </Typography>
                 </Box>
-                <Box className="bg-gray-200 rounded w-1/2 h-16 m-5">
+                <Box className="bg-gray-200 rounded md:w-full h-16 m-5 p-5">
                   <RadioGroup
                     className="flex justify-center items-center h-full"
                     id="typeOfCar"
@@ -216,7 +215,7 @@ export function CreateOrderForm({ closeModal }: Props) {
                 label="Количество грузчиков"
                 name="movers"
                 id="movers"
-                value={formik.values.movers}
+                value={formik.values.movers || ""}
                 onChange={formik.handleChange}
               />
             </>

@@ -48,14 +48,18 @@ export interface OrderFull extends Order {
 }
 
 export interface User {
-  _id: string;
   firstName: string;
   surName: string;
   phone: string;
   email: string;
-  password: string;
-  picturePath: string;
   role: string;
+  ordersMade: number;
+}
+
+export interface Admin extends User {
+  _id: string;
+  password?: string;
+  picturePath: string;
   createdAt: Date;
   updatedAt: Date;
 }

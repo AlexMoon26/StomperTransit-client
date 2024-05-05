@@ -2,10 +2,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Profile } from "@/features/Profile";
 import { Menu } from "@/features/Menu";
-import { User } from "@/types";
+import { Admin } from "@/types";
 
 interface Props {
-  user: User;
+  user: Admin;
 }
 
 export const SideBar = ({ user }: Props) => {

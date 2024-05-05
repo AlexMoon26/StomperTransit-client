@@ -21,7 +21,6 @@ export const boxModal = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "60vw",
   bgcolor: "background.paper",
   boxShadow: 24,
 };
@@ -58,7 +57,10 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={boxModal} className="rounded-lg box-modal max-h-[90vh]">
+        <Box
+          sx={boxModal}
+          className="rounded-lg box-modal max-h-[90vh] w-[65vw] max-md:w-full max-md:max-h-full"
+        >
           <Box className="flex justify-between items-center p-5 border-b">
             <Typography fontSize={20} id="modal-modal-title">
               {title}

@@ -4,7 +4,7 @@ import React from "react";
 
 async function ClientsPage() {
   const clients = await getClients();
-  return <ClientsList clients={clients} />;
+  return <ClientsList clients={clients ? clients : []} />;
 }
 
 export default ClientsPage;

@@ -26,6 +26,7 @@ interface Props {
 }
 
 const validationSchema = Yup.object().shape({
+  client: Yup.object().required("Клиент обязателен"),
   pointA: Yup.string()
     .required("Точка A обязательна")
     .notOneOf([Yup.ref("pointB"), null], "Точки не должны совпадать"),
@@ -46,8 +47,8 @@ export function CreateOrderForm({ closeModal }: Props) {
   const [bodySize, setBodySize] = useState("");
   const formik = useFormik<Order>({
     initialValues: {
-      pointA: "",
-      pointB: "",
+      pointA: "г Краснодар,",
+      pointB: "г Краснодар,",
       weight: 10,
       client: undefined,
       typeOfCar: "express",
@@ -150,6 +151,7 @@ export function CreateOrderForm({ closeModal }: Props) {
             options={places}
             color="primary"
             id="pointA"
+            noOptionsText="Не найдено"
             isOptionEqualToValue={(option, value) =>
               option.value === value?.value
             }
@@ -181,6 +183,7 @@ export function CreateOrderForm({ closeModal }: Props) {
             options={places}
             color="primary"
             id="pointB"
+            noOptionsText="Не найдено"
             isOptionEqualToValue={(option, value) =>
               option.value === value?.value
             }

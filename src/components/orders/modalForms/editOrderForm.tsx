@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as Yup from "yup";
 import {
   Autocomplete,
@@ -14,6 +15,7 @@ import { toast } from "sonner";
 import {
   OrderFull,
   OrderStatus,
+  Places,
   User,
   bodySizeMap,
   bodyWeightMap,
@@ -22,6 +24,8 @@ import { editOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
 import { BodySize, DeliveryOption, deliveryOptions } from "../DeliveryOption";
+import moment from "moment";
+import { handleSearchPlaces } from "@/config/searchPlaces";
 
 interface Props {
   order: OrderFull;
@@ -31,8 +35,13 @@ interface Props {
 const validationSchema = Yup.object().shape({
   _id: Yup.string().required(),
   status: Yup.string().required("Статус обязателен"),
-  pointA: Yup.string().required("Точка A обязательна"),
-  pointB: Yup.string().required("Точка B обязательна"),
+  pointA: Yup.string()
+    .required("Точка A обязательна")
+    .notOneOf([Yup.ref("pointB"), null], "Точки не должны совпадать"),
+  pointB: Yup.string()
+    .required("Точка B обязательна")
+    .notOneOf([Yup.ref("pointA"), null], "Точки не должны совпадать"),
+  approximateTime: Yup.date().required("Ориентировочное время обязательно"),
   weight: Yup.number()
     .required("Вес обязателен")
     .positive("Вес должен быть положительным числом")
@@ -41,19 +50,21 @@ const validationSchema = Yup.object().shape({
 
 export function EditOrderForm({ order, closeModal }: Props) {
   const [drivers, setDrivers] = useState<User[]>([]);
+  const [places, setPlaces] = useState<Places[]>([]);
   const [bodySize, setBodySize] = useState("");
   const formik = useFormik({
     initialValues: {
       _id: order._id,
       status: order.status,
-      pointA: order.pointA,
-      pointB: order.pointB,
+      pointA: order.pointA || "",
+      pointB: order.pointB || "",
       weight: order.weight,
       client: order.client,
       driver: order.driver,
       typeOfCar: order.typeOfCar,
       bodySize: order.bodySize,
       movers: order.movers,
+      approximateTime: order.approximateTime,
       driverStatus: order.driverStatus,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
@@ -73,6 +84,11 @@ export function EditOrderForm({ order, closeModal }: Props) {
     },
   });
 
+  const handleSearch = async (search: string) => {
+    const fetchedPlaces = await handleSearchPlaces(search);
+    setPlaces(fetchedPlaces);
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -88,8 +104,6 @@ export function EditOrderForm({ order, closeModal }: Props) {
     if (formik.values.typeOfCar !== "cargo") {
       setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
-
-      formik.setFieldValue("weight", 99);
     } else {
       if (bodySize !== "") {
         formik.setFieldValue("bodySize", bodySize);
@@ -98,7 +112,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
   }, [formik.values.typeOfCar]);
 
   useEffect(() => {
-    if (formik.values.weight > 100) {
+    if (formik.values.weight >= 100) {
       formik.setFieldValue("typeOfCar", "cargo");
     }
     if (formik.values.weight < 100) {
@@ -106,7 +120,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
     }
     if (formik.values.weight < 300) {
       formik.setFieldValue("bodySize", "S");
-      formik.setFieldValue("movers", null);
+      formik.setFieldValue("movers", undefined);
     }
     if (formik.values.weight > 300) {
       formik.setFieldValue("bodySize", "M");
@@ -181,51 +195,90 @@ export function EditOrderForm({ order, closeModal }: Props) {
               )}
             />
           )}
-
-          <TextField
+          <Autocomplete
+            disablePortal
+            options={places}
+            disabled={OrderStatus[formik.values.status] === "Выполняется"}
             color="primary"
-            label="Точка А"
-            name="pointA"
             id="pointA"
-            placeholder="г.Краснодар, ул. Красная, 1"
+            isOptionEqualToValue={(option, value) =>
+              option.value === value?.value
+            }
+            //@ts-ignore
             value={formik.values.pointA}
-            onChange={(e) =>
-              formik.handleChange({
-                target: {
-                  name: "updatedFields.pointA",
-                  value: e.target.value,
-                },
-              })
+            getOptionLabel={(option) => {
+              if (typeof option === "object") {
+                return option.value || "";
+              } else {
+                return option;
+              }
+            }}
+            onChange={(e, value) =>
+              formik.setFieldValue("pointA", value ? value.value : "")
             }
-            onBlur={() =>
-              formik.handleBlur({
-                target: { name: "updatedFields.pointA" },
-              })
-            }
-            error={formik.touched.pointA && Boolean(formik.errors.pointA)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Точка А"
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="г Краснодар, ул Красная, 1"
+                error={formik.touched.pointA && Boolean(formik.errors.pointA)}
+                helperText={formik.errors.pointA && formik.errors.pointA}
+              />
+            )}
           />
-          <TextField
-            label="Точка B"
-            name="pointB"
+          <Autocomplete
+            disablePortal
+            options={places}
+            disabled={OrderStatus[formik.values.status] === "Выполняется"}
+            color="primary"
             id="pointB"
-            placeholder="г.Краснодар, ул. Красная, 1"
+            isOptionEqualToValue={(option, value) =>
+              option.value === value?.value
+            }
+            //@ts-ignore
             value={formik.values.pointB}
-            onChange={(e) =>
-              formik.handleChange({
-                target: {
-                  name: "updatedFields.pointB",
-                  value: e.target.value,
-                },
-              })
+            getOptionLabel={(option) => {
+              if (typeof option === "object") {
+                return option.value || "";
+              } else {
+                return option;
+              }
+            }}
+            onChange={(e, value) =>
+              formik.setFieldValue("pointB", value ? value.value : "")
             }
-            onBlur={() =>
-              formik.handleBlur({
-                target: { name: "updatedFields.pointB" },
-              })
-            }
-            error={formik.touched.pointB && Boolean(formik.errors.pointB)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Точка Б"
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="г Краснодар, ул Красная, 1"
+                error={formik.touched.pointB && Boolean(formik.errors.pointB)}
+                helperText={formik.errors.pointB && formik.errors.pointB}
+              />
+            )}
           />
           <TextField
+            disabled={OrderStatus[formik.values.status] === "Выполняется"}
+            label="Ориентировочое время"
+            name="approximateTime"
+            id="approximateTime"
+            placeholder={moment().format("DD.MM.yy")}
+            value={formik.values.approximateTime}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.approximateTime &&
+              Boolean(formik.errors.approximateTime)
+            }
+            helperText={
+              formik.errors.approximateTime && formik.errors.approximateTime
+            }
+          />
+          <TextField
+            disabled={OrderStatus[formik.values.status] === "Выполняется"}
+            type="number"
             label="Вес"
             name="weight"
             id="weight"
@@ -281,6 +334,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
                 </Box>
               </Box>
               <TextField
+                disabled={OrderStatus[formik.values.status] === "Выполняется"}
                 type="number"
                 label="Количество грузчиков"
                 name="movers"

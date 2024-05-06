@@ -45,9 +45,8 @@ export const OrderCard = ({ order }: Props) => {
       >
         <Box className="w-full flex flex-col gap-3 justify-center">
           <Box className="flex items-center justify-between">
-            <h5 className="text-gray-400">
-              Клиент: {order.client?.surName} {order.client?.firstName}
-            </h5>
+            <h5 className="text-gray-400">ID: {order._id}</h5>
+
             <span
               className={`inline-flex items-center  ${
                 OrderStatus[order.status] === "В ожидании" &&
@@ -73,6 +72,10 @@ export const OrderCard = ({ order }: Props) => {
             </span>
           </Box>
 
+          <h5 className="text-gray-400">
+            Клиент: {order.client?.surName} {order.client?.firstName}
+          </h5>
+
           <Box>
             <h5 className="text-green-500">
               <span className="text-gray-500">Из</span> {order.pointA}
@@ -84,6 +87,10 @@ export const OrderCard = ({ order }: Props) => {
 
           <h5 className="text-gray-400">
             Дата формирования: {moment(order.createdAt).format("LLL")}
+          </h5>
+          <h5 className="text-gray-400">
+            Ориентировочное время:{" "}
+            {moment(order.approximateTime).format("MM.DD.yy")}
           </h5>
 
           <h5 className="text-gray-500 dark:text-gray-400">

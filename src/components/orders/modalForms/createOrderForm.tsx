@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import * as Yup from "yup";
 import {
@@ -12,20 +13,26 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { Order, User, bodySizeMap, bodyWeightMap } from "@/types";
+import { Order, Places, User, bodySizeMap, bodyWeightMap } from "@/types";
 import { createOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
 import { BodySize, DeliveryOption, deliveryOptions } from "../DeliveryOption";
+import moment from "moment";
+import { handleSearchPlaces } from "@/config/searchPlaces";
 
 interface Props {
   closeModal: () => void;
 }
 
 const validationSchema = Yup.object().shape({
-  client: Yup.object().required("Клиент обязателен"),
-  pointA: Yup.string().required("Точка A обязательна"),
-  pointB: Yup.string().required("Точка B обязательна"),
+  pointA: Yup.string()
+    .required("Точка A обязательна")
+    .notOneOf([Yup.ref("pointB"), null], "Точки не должны совпадать"),
+  pointB: Yup.string()
+    .required("Точка B обязательна")
+    .notOneOf([Yup.ref("pointA"), null], "Точки не должны совпадать"),
+  approximateTime: Yup.date().required("Ориентировочное время обязательно"),
   weight: Yup.number()
     .required("Вес обязателен")
     .positive("Вес должен быть положительным числом")
@@ -34,15 +41,19 @@ const validationSchema = Yup.object().shape({
 
 export function CreateOrderForm({ closeModal }: Props) {
   const [users, setUsers] = useState<User[]>([]);
+  const [places, setPlaces] = useState<Places[]>([]);
+
+  const [bodySize, setBodySize] = useState("");
   const formik = useFormik<Order>({
     initialValues: {
       pointA: "",
       pointB: "",
-      weight: 0,
+      weight: 10,
       client: undefined,
       typeOfCar: "express",
       bodySize: "S",
       movers: null,
+      approximateTime: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -59,6 +70,11 @@ export function CreateOrderForm({ closeModal }: Props) {
     },
   });
 
+  const handleSearch = async (search: string) => {
+    const fetchedPlaces = await handleSearchPlaces(search);
+    setPlaces(fetchedPlaces);
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -72,14 +88,17 @@ export function CreateOrderForm({ closeModal }: Props) {
 
   useEffect(() => {
     if (formik.values.typeOfCar !== "cargo") {
+      setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
     } else {
-      formik.setFieldValue("bodySize", "S");
+      if (bodySize !== "") {
+        formik.setFieldValue("bodySize", bodySize);
+      }
     }
   }, [formik.values.typeOfCar]);
 
   useEffect(() => {
-    if (formik.values.weight > 100) {
+    if (formik.values.weight >= 100) {
       formik.setFieldValue("typeOfCar", "cargo");
     }
     if (formik.values.weight < 100) {
@@ -87,7 +106,7 @@ export function CreateOrderForm({ closeModal }: Props) {
     }
     if (formik.values.weight < 300) {
       formik.setFieldValue("bodySize", "S");
-      formik.setFieldValue("movers", null);
+      formik.setFieldValue("movers", undefined);
     }
     if (formik.values.weight > 300) {
       formik.setFieldValue("bodySize", "M");
@@ -126,36 +145,86 @@ export function CreateOrderForm({ closeModal }: Props) {
               />
             )}
           />
-          <TextField
+          <Autocomplete
+            disablePortal
+            options={places}
             color="primary"
-            label="Точка А"
-            name="pointA"
             id="pointA"
-            placeholder="г.Краснодар, ул. Красная, 1"
+            isOptionEqualToValue={(option, value) =>
+              option.value === value?.value
+            }
+            //@ts-ignore
             value={formik.values.pointA}
-            onChange={formik.handleChange}
-            onBlur={() =>
-              formik.handleBlur({
-                target: { name: "updatedFields.pointA" },
-              })
+            getOptionLabel={(option) => {
+              if (typeof option === "object") {
+                return option.value || "";
+              } else {
+                return option;
+              }
+            }}
+            onChange={(e, value) =>
+              formik.setFieldValue("pointA", value ? value.value : "")
             }
-            error={formik.touched.pointA && Boolean(formik.errors.pointA)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Точка А"
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="г Краснодар, ул Красная, 1"
+                error={formik.touched.pointA && Boolean(formik.errors.pointA)}
+                helperText={formik.errors.pointA && formik.errors.pointA}
+              />
+            )}
           />
-          <TextField
-            label="Точка B"
-            name="pointB"
+          <Autocomplete
+            disablePortal
+            options={places}
+            color="primary"
             id="pointB"
-            placeholder="г.Краснодар, ул. Красная, 1"
-            value={formik.values.pointB}
-            onChange={formik.handleChange}
-            onBlur={() =>
-              formik.handleBlur({
-                target: { name: "updatedFields.pointB" },
-              })
+            isOptionEqualToValue={(option, value) =>
+              option.value === value?.value
             }
-            error={formik.touched.pointB && Boolean(formik.errors.pointB)}
+            //@ts-ignore
+            value={formik.values.pointB}
+            getOptionLabel={(option) => {
+              if (typeof option === "object") {
+                return option.value || "";
+              } else {
+                return option;
+              }
+            }}
+            onChange={(e, value) =>
+              formik.setFieldValue("pointB", value ? value.value : "")
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Точка Б"
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="г Краснодар, ул Красная, 1"
+                error={formik.touched.pointB && Boolean(formik.errors.pointB)}
+                helperText={formik.errors.pointB && formik.errors.pointB}
+              />
+            )}
           />
           <TextField
+            label="Ориентировочое время"
+            name="approximateTime"
+            id="approximateTime"
+            placeholder={moment().format("DD.MM.yy")}
+            value={formik.values.approximateTime}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.approximateTime &&
+              Boolean(formik.errors.approximateTime)
+            }
+            helperText={
+              formik.errors.approximateTime && formik.errors.approximateTime
+            }
+          />
+          <TextField
+            type="number"
             label="Вес"
             name="weight"
             id="weight"

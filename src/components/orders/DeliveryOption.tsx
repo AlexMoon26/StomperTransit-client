@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Radio, Typography } from "@mui/material";
 import Image from "next/image";
+import { OrderStatus } from "@/types";
 
 export const deliveryOptions = [
   {
@@ -36,7 +37,10 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
           ? { backgroundColor: "#f5f5f5" }
           : {}),
       }}
-      onClick={() => formik.setFieldValue("typeOfCar", value)}
+      onClick={() =>
+        OrderStatus[formik.values.status] !== "Выполняется" &&
+        formik.setFieldValue("typeOfCar", value)
+      }
     >
       <img
         src={image}
@@ -44,7 +48,10 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
         style={{ width: 50, height: 20, marginRight: 16 }}
       />
       <Typography variant="body2">{label}</Typography>
-      <Radio checked={formik.values.typeOfCar === value} />
+      <Radio
+        disabled={OrderStatus[formik.values.status] === "Выполняется"}
+        checked={formik.values.typeOfCar === value}
+      />
     </Box>
   );
 };
@@ -52,7 +59,10 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
 export const BodySize = ({ value, formik }) => {
   return (
     <Box
-      onClick={() => formik.setFieldValue("bodySize", value)}
+      onClick={() =>
+        OrderStatus[formik.values.status] !== "Выполняется" &&
+        formik.setFieldValue("bodySize", value)
+      }
       sx={{
         display: "flex",
         justifyContent: "center",

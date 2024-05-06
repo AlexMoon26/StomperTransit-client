@@ -6,6 +6,7 @@ import { Box, Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { redirect, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import * as Yup from "yup";
 
@@ -22,16 +23,16 @@ export function Account({ user }: Props) {
   const router = useRouter();
   const formik = useFormik<UserFull>({
     initialValues: {
-      _id: user._id,
-      firstName: user.firstName,
-      surName: user.surName,
-      picturePath: user.picturePath,
-      phone: user.phone,
-      email: user.email,
-      role: user.role,
-      ordersMade: user.ordersMade,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      _id: user._id || "",
+      firstName: user.firstName || "",
+      surName: user.surName || "",
+      picturePath: user.picturePath || "",
+      phone: user.phone || "",
+      email: user.email || "",
+      role: user.role || "",
+      ordersMade: user.ordersMade || 0,
+      createdAt: user.createdAt || "",
+      updatedAt: user.updatedAt || "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -45,6 +46,10 @@ export function Account({ user }: Props) {
       }
     },
   });
+
+  if (!user) {
+    return <></>;
+  }
   return (
     <form
       onSubmit={formik.handleSubmit}

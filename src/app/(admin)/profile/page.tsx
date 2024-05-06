@@ -6,7 +6,7 @@ async function ProfilePage() {
   const user = await profile();
   return (
     <>
-      <Account user={user} />
+      <Account user={user ? user : []} />
     </>
   );
 }

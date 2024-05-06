@@ -36,6 +36,7 @@ export interface Order {
   typeOfCar: string;
   bodySize: string;
   movers: number | null;
+  approximateTime: string
 }
 
 export interface OrderFull extends Order {
@@ -64,19 +65,11 @@ export interface UserFull extends User {
   updatedAt: Date;
 }
 
-interface IProps {
-  name: string;
-  imgUser: string;
-  countOrder: number;
-  status: string;
-  rating?: number;
+export interface Places {
+  value: string;
 }
 
-export interface TableProps {
-  data: Array<IProps>;
-  clients?: Boolean;
-  drivers?: Boolean;
-}
+
 
 export interface InputProps {
   data: string;

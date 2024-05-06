@@ -12,7 +12,7 @@ export async function login(data: AuthFormSignIn) {
 
     const { token, user } = await response;
 
-    if (!!token && user) {
+    if (!!token && !!user) {
       cookies().set("token", token, {
         expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -21,6 +21,8 @@ export async function login(data: AuthFormSignIn) {
         expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
+    } else {
+      return false;
     }
     return response;
   } catch (err) {
@@ -42,7 +44,7 @@ export async function register(data: AuthFormSignIn) {
         expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
-      cookies().set("user", user, {
+      cookies().set("role", user.role, {
         expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });

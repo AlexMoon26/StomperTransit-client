@@ -15,7 +15,7 @@ interface Props {
   order: OrderFull;
 }
 
-export const OrderCard = ({ order }: Props) => {
+export const SmallOrderCard = ({ order }: Props) => {
   const { openModal, closeModal } = useContext(ModalContext);
 
   async function handleDeleteOrder() {
@@ -43,7 +43,7 @@ export const OrderCard = ({ order }: Props) => {
         }  p-5 rounded bg-white`}
         role="list"
       >
-        <Box className="w-full flex flex-col gap-3 justify-center">
+        <Box className="w-full flex flex-col gap-2 justify-center">
           <Box className="flex items-center justify-between">
             <h5 className="text-gray-400">ID: {order._id}</h5>
 
@@ -88,57 +88,18 @@ export const OrderCard = ({ order }: Props) => {
           <h5 className="text-gray-400">
             Дата формирования: {moment(order.createdAt).format("LLL")}
           </h5>
-          <h5 className="text-gray-400">
-            Ориентировочное время: {moment(order.approximateTime).format("ll")}
-          </h5>
-
-          <h5 className="text-gray-500 dark:text-gray-400">
-            Вес: {order.weight} кг
-          </h5>
           <h5 className="text-gray-500 dark:text-gray-400">
             Вид доставки: {DeliveryStatus[order.typeOfCar]} {order?.bodySize}
           </h5>
-          {order.movers ? (
-            <h5 className="text-gray-500 dark:text-gray-400">
-              Количество грузчиков: {order.movers}
-            </h5>
-          ) : (
-            ""
-          )}
-          <Box className="flex">
-            <Box className="flex w-full items-center">
-              {OrderStatus[order.status] === "В ожидании" ? (
-                <span className="font-normal leading-tight hover:cursor-pointer dark:text-purple-400">
-                  Выберите водителя
-                </span>
-              ) : OrderStatus[order.status] === "Выполняется" ? (
-                <>
-                  <span className="font-normal leading-tight  dark:text-orange-400">
-                    Водитель - {` `}
-                    {`${order.driver?.firstName || ""} ${
-                      order.driver?.surName || ""
-                    }`}
-                  </span>
-                  <span className="font-normal leading-tight text-red-400 ">
-                    {order.driverStatus}
-                  </span>
-                </>
-              ) : (
-                <span className="font-normal leading-tight  dark:text-green-500">
-                  Водитель - {order.driver?.firstName} {order.driver?.surName}
-                </span>
-              )}
-            </Box>
-            <Box className="w-full flex justify-end gap-3">
-              <IconButton onClick={handleDeleteOrder}>
-                <DeleteIcon color="error" />
+          <Box className="w-full flex justify-end gap-3">
+            <IconButton onClick={handleDeleteOrder}>
+              <DeleteIcon color="error" />
+            </IconButton>
+            {OrderStatus[order.status] !== "Выполнена" && (
+              <IconButton onClick={handleOpenEditOrderModal}>
+                <ModeIcon color="warning" />
               </IconButton>
-              {OrderStatus[order.status] !== "Выполнена" && (
-                <IconButton onClick={handleOpenEditOrderModal}>
-                  <ModeIcon color="warning" />
-                </IconButton>
-              )}
-            </Box>
+            )}
           </Box>
         </Box>
       </div>

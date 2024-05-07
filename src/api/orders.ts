@@ -50,3 +50,14 @@ export async function deleteOrder(id: string) {
   revalidateTag("orders");
   return response;
 }
+
+export async function getOrdersCount() {
+  const response = await apiFetch(
+    `orders/count?startDate='01.04.2024&endDate='07.05.2024'`,
+    {
+      method: "get",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  return response;
+}

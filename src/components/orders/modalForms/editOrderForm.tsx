@@ -52,6 +52,8 @@ const validationSchema = Yup.object().shape({
     .required("Вес обязателен")
     .positive("Вес должен быть положительным числом")
     .max(2000, "Вес не должен превышать 2000 кг"),
+  // driver: Yup.object()
+  //   .when("status")
 });
 
 export function EditOrderForm({ order, closeModal }: Props) {

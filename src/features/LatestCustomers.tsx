@@ -11,7 +11,7 @@ export const LatestCustomers = ({ orders }) => {
             Выполненные заказы
           </h5>
           <Link
-            href={`/admin/orders`}
+            href={`/orders`}
             className="text-sm font-medium text-green-500 hover:underline"
           >
             Посмотреть все
@@ -22,15 +22,6 @@ export const LatestCustomers = ({ orders }) => {
             {orders.map((order, i) => (
               <li key={i} className="py-3 sm:py-4zz">
                 <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <Image
-                      className="rounded-full"
-                      src="/images/profile.png"
-                      alt="Lana image"
-                      width={50}
-                      height={50}
-                    />
-                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-600 truncate">
                       {order.customerName}

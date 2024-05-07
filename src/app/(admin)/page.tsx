@@ -3,14 +3,14 @@ import { LatestCustomers } from "@/features/LatestCustomers";
 import { Orders } from "@/widgets/Orders";
 import { ButtonsAdminPage } from "@/features/ButtonsAdminPage";
 import { getPendingOrders } from "@/api/orders";
-import { Donuts } from "@/widgets/Donuts";
+import { DonutsList } from "@/components/charts/donutsList";
 
 async function mainPage() {
   const orders = await getPendingOrders();
   return (
     <div>
       <div className="flex max-xl:flex-col max-xl:items-center justify-between  gap-4 mb-10">
-        <Donuts />
+        <DonutsList />
 
         <div className="flex max-xl:w-full w-1/2 justify-end">
           <LatestCustomers
@@ -43,7 +43,7 @@ async function mainPage() {
           <ButtonsAdminPage />
           <Orders orders={orders ? orders : []} />
         </div>
-        <div className="p-10 w-1/2 bg-white rounded max-lg:w-full max-h-[550px] shadow">
+        <div className="p-10 w-1/2 bg-white rounded max-lg:w-full max-h-[556.5px] shadow">
           <Calc />
         </div>
       </div>

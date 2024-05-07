@@ -1,5 +1,5 @@
 "use client";
-import { OrderCard } from "@/components/orders/orderCard";
+import { SmallOrderCard } from "@/components/orders/smallOrderCard";
 import { OrderFull } from "@/types";
 import { Box, Button } from "@mui/material";
 import { useState } from "react";
@@ -32,10 +32,10 @@ export const Orders = ({ orders }: Props) => {
           {!showFullList &&
             orders
               .slice(0, 3)
-              .map((order, i) => <OrderCard key={i} order={order} />)}
+              .map((order, i) => <SmallOrderCard key={i} order={order} />)}
 
           {showFullList &&
-            orders.map((order, i) => <OrderCard key={i} order={order} />)}
+            orders.map((order, i) => <SmallOrderCard key={i} order={order} />)}
         </>
       )}
     </>

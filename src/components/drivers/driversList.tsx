@@ -1,6 +1,6 @@
 "use client";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
-import { User } from "@/types";
+import { UserFull } from "@/types";
 import {
   Box,
   Button,
@@ -11,28 +11,27 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useContext, useState } from "react";
-import { ClientCard } from "./clientCard";
 import { ModalContext } from "../modalContext";
-import { CreateClientForm } from "./modalForms/createClientForm";
+import { DriverCard } from "./driverCard";
 
 interface Props {
-  clients: User[];
+  drivers: UserFull[];
 }
 
-export function ClientsList({ clients }: Props) {
+export function DriversList({ drivers }: Props) {
   const { openModal, closeModal } = useContext(ModalContext);
   const [searchTerm, setSearchTerm] = useState("");
   const { isDesktop } = useScreenWidth();
 
-  const handleNewClient = () => {
-    openModal({
-      component: CreateClientForm,
-      props: { closeModal },
-      title: "Создание нового клиента",
-    });
-  };
+  //   const handleNewClient = () => {
+  //     openModal({
+  //       component: CreateClientForm,
+  //       props: { closeModal },
+  //       title: "Создание нового водителя",
+  //     });
+  //   };
   const searchTextLower = searchTerm.toLowerCase().split(" ");
-  const filteredClients = clients.filter((item) => {
+  const filteredDrivers = drivers.filter((item) => {
     const firstNameLower = item.firstName.toLowerCase();
     const surNameLower = item.surName?.toLowerCase();
 
@@ -63,16 +62,14 @@ export function ClientsList({ clients }: Props) {
         </Box>
       </Box>
       <Box className="mb-4">
-        <Button onClick={handleNewClient} fullWidth>
-          Добавить клиента
-        </Button>
+        <Button fullWidth>Добавить водителя</Button>
       </Box>
 
-      {filteredClients.length > 0 ? (
+      {filteredDrivers.length > 0 ? (
         <div className="grid grid-cols-2 max-lg:grid-cols-1 gap-4">
-          {clients
-            ? filteredClients?.map((client, i) => (
-                <ClientCard key={i} client={client} />
+          {drivers
+            ? filteredDrivers?.map((driver, i) => (
+                <DriverCard key={i} driver={driver} />
               ))
             : "Заявок нет"}
         </div>

@@ -34,6 +34,7 @@ interface Props {
 
 const validationSchema = Yup.object().shape({
   _id: Yup.string().required(),
+  client: Yup.object().required("Клиент обязателен"),
   status: Yup.string().required("Статус обязателен"),
   pointA: Yup.string()
     .required("Точка A обязательна")
@@ -56,8 +57,8 @@ export function EditOrderForm({ order, closeModal }: Props) {
     initialValues: {
       _id: order._id,
       status: order.status,
-      pointA: order.pointA || "",
-      pointB: order.pointB || "",
+      pointA: order.pointA,
+      pointB: order.pointB,
       weight: order.weight,
       client: order.client,
       driver: order.driver,
@@ -201,6 +202,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
             disabled={OrderStatus[formik.values.status] === "Выполняется"}
             color="primary"
             id="pointA"
+            noOptionsText="Не найдено"
             isOptionEqualToValue={(option, value) =>
               option.value === value?.value
             }
@@ -232,6 +234,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
             options={places}
             disabled={OrderStatus[formik.values.status] === "Выполняется"}
             color="primary"
+            noOptionsText="Не найдено"
             id="pointB"
             isOptionEqualToValue={(option, value) =>
               option.value === value?.value

@@ -22,7 +22,7 @@ export async function login(data: AuthFormSignIn) {
         httpOnly: true,
       });
     } else {
-      return false
+      return false;
     }
     return response;
   } catch (err) {
@@ -38,9 +38,6 @@ export async function register(data: AuthFormSignIn) {
     });
 
     const { token, user } = await response;
-
-
-
 
     if (!!token && user) {
       cookies().set("token", token, {

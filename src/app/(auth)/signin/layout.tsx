@@ -8,7 +8,7 @@ export const metadata = {
 
 export default async function AuthLayout({ children }) {
   const user = await profile();
-  if (user.role === "admin") {
+  if (user && user.role === "admin") {
     redirect("/");
   }
   return <div>{children} </div>;

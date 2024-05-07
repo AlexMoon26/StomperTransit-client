@@ -36,7 +36,7 @@ export interface Order {
   typeOfCar: string;
   bodySize: string;
   movers: number | null;
-  approximateTime: string
+  approximateTime: string;
 }
 
 export interface OrderFull extends Order {
@@ -54,7 +54,7 @@ export interface User {
   phone: string;
   email: string;
   role: string;
-  ordersMade: number;
+  ordersMade?: number;
 }
 
 export interface UserFull extends User {
@@ -68,8 +68,6 @@ export interface UserFull extends User {
 export interface Places {
   value: string;
 }
-
-
 
 export interface InputProps {
   data: string;

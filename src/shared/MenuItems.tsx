@@ -25,10 +25,8 @@ export const MenuItems = ({ name, path, Icon, onClick }: IProps) => {
       <Link
         onClick={onClick}
         href={`/${path}`}
-        className={`flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group ${
-          isCurrentPage(path)
-            ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-            : "text-gray-400"
+        className={`flex items-center p-2 rounded-lg hover:bg-gray-700 group ${
+          isCurrentPage(path) ? "bg-gray-700  text-white" : "text-gray-400"
         }`}
       >
         {Icon && <Icon className="text-white" />}

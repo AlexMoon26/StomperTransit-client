@@ -12,7 +12,6 @@ export async function login(data: AuthFormSignIn) {
 
     const { token, user } = await response;
 
-
     if (!!token && !!user) {
       cookies().set("token", token, {
         expires: Date.now() + 21 * 24 * 60 * 60 * 1000,
@@ -68,6 +67,8 @@ export async function authLogout() {
 export async function profile() {
   try {
     const response = await apiFetch("auth/me");
+
+
     return response.user;
   } catch (err) {
     return { ok: false, message: err };

@@ -5,6 +5,7 @@ import { profile } from "./api/auth";
 export default async function middleware(req: NextRequest) {
   const token = cookies().get("token")?.value;
 
+
   if (!token) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
@@ -13,16 +14,20 @@ export default async function middleware(req: NextRequest) {
     const response = await profile();
 
     if (!response) {
+      console.error("Error: Token is missing");
       return NextResponse.redirect(new URL("/signin", req.url));
     }
 
-    const role = response.role;
+    const role = await response?.role;
+
 
     if (role === "admin") {
       return NextResponse.next();
     } else {
+
       return NextResponse.redirect(new URL("/signin", req.url));
     }
+
   } catch (error) {
     console.error("Error in middleware:", error);
     return NextResponse.redirect(new URL("/signin", req.url));

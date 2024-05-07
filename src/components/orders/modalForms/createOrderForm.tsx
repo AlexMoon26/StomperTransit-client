@@ -18,8 +18,11 @@ import { createOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
 import { BodySize, DeliveryOption, deliveryOptions } from "../DeliveryOption";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import { handleSearchPlaces } from "@/config/searchPlaces";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 interface Props {
   closeModal: () => void;
@@ -33,7 +36,7 @@ const validationSchema = Yup.object().shape({
   pointB: Yup.string()
     .required("Точка B обязательна")
     .notOneOf([Yup.ref("pointA"), null], "Точки не должны совпадать"),
-  approximateTime: Yup.date().required("Ориентировочное время обязательно"),
+  approximateTime: Yup.date().required("Ориентировочная дата обязательна"),
   weight: Yup.number()
     .required("Вес обязателен")
     .positive("Вес должен быть положительным числом")
@@ -74,6 +77,17 @@ export function CreateOrderForm({ closeModal }: Props) {
   const handleSearch = async (search: string) => {
     const fetchedPlaces = await handleSearchPlaces(search);
     setPlaces(fetchedPlaces);
+  };
+
+  const setDates = (startDate: Moment, format = "YYYY-MM-DD") => {
+    formik.setFieldValue("approximateTime", startDate.format(format));
+  };
+
+  const handleTodayClick = () => {
+    setDates(moment());
+  };
+  const handleTommorowClick = () => {
+    setDates(moment().add(1, "day"));
   };
 
   useEffect(() => {
@@ -211,22 +225,43 @@ export function CreateOrderForm({ closeModal }: Props) {
               />
             )}
           />
-          <TextField
-            label="Ориентировочое время"
-            name="approximateTime"
-            id="approximateTime"
-            placeholder={moment().format("DD.MM.yy")}
-            value={formik.values.approximateTime}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.approximateTime &&
-              Boolean(formik.errors.approximateTime)
-            }
-            helperText={
-              formik.errors.approximateTime && formik.errors.approximateTime
-            }
-          />
+          <Box className="flex flex-col gap-2">
+            <LocalizationProvider dateAdapter={AdapterMoment}>
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  className="w-full"
+                  label="Ориентировочная дата"
+                  name="approximateTime"
+                  disablePast
+                  value={moment(formik.values.approximateTime)}
+                  onChange={(value) =>
+                    formik.setFieldValue("approximateTime", value)
+                  }
+                  slotProps={{
+                    textField: {
+                      helperText: "Ориентировочная дата обязательна",
+                    },
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <div className="grid grid-cols-6 max-md:grid-cols-3 items-center gap-5">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleTodayClick}
+              >
+                Сегодня
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleTommorowClick}
+              >
+                Завтра
+              </Button>
+            </div>
+          </Box>
           <TextField
             type="number"
             label="Вес"

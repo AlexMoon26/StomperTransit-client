@@ -89,8 +89,7 @@ export const OrderCard = ({ order }: Props) => {
             Дата формирования: {moment(order.createdAt).format("LLL")}
           </h5>
           <h5 className="text-gray-400">
-            Ориентировочное время:{" "}
-            {moment(order.approximateTime).format("MM.DD.yy")}
+            Ориентировочное время: {moment(order.approximateTime).format("ll")}
           </h5>
 
           <h5 className="text-gray-500 dark:text-gray-400">

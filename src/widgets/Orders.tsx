@@ -1,12 +1,16 @@
+"use client";
 import { OrderCard } from "@/components/orders/orderCard";
 import { OrderFull } from "@/types";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import { useState } from "react";
 
 interface Props {
   orders: OrderFull[];
 }
 
 export const Orders = ({ orders }: Props) => {
+  const [showFullList, setShowFullList] = useState(false);
+
   return (
     <>
       {orders?.length < 1 && (
@@ -14,9 +18,26 @@ export const Orders = ({ orders }: Props) => {
           Нет заявок в ожидании
         </Box>
       )}
-      {orders &&
-        orders.length > 0 &&
-        orders?.map((order, i) => <OrderCard key={i} order={order} />)}
+
+      {orders && orders.length > 0 && (
+        <>
+          {orders.length > 3 && (
+            <Button onClick={() => setShowFullList(!showFullList)}>
+              {!showFullList
+                ? "Показать все заявки"
+                : "Показать три первые заявки"}{" "}
+              ({orders.length - 3})
+            </Button>
+          )}
+          {!showFullList &&
+            orders
+              .slice(0, 3)
+              .map((order, i) => <OrderCard key={i} order={order} />)}
+
+          {showFullList &&
+            orders.map((order, i) => <OrderCard key={i} order={order} />)}
+        </>
+      )}
     </>
   );
 };

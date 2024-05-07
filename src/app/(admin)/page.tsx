@@ -43,7 +43,7 @@ async function mainPage() {
           <ButtonsAdminPage />
           <Orders orders={orders ? orders : []} />
         </div>
-        <div className="p-10 w-1/2 bg-white rounded max-lg:w-full shadow">
+        <div className="p-10 w-1/2 bg-white rounded max-lg:w-full max-h-[550px] shadow">
           <Calc />
         </div>
       </div>

@@ -115,6 +115,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
   useEffect(() => {
     if (formik.values.weight >= 100) {
       formik.setFieldValue("typeOfCar", "cargo");
+      setBodySize(formik.values.bodySize);
     }
     if (formik.values.weight < 100) {
       formik.setFieldValue("typeOfCar", "express");
@@ -123,7 +124,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
       formik.setFieldValue("bodySize", "S");
       formik.setFieldValue("movers", undefined);
     }
-    if (formik.values.weight > 300) {
+    if (formik.values.weight >= 300) {
       formik.setFieldValue("bodySize", "M");
       formik.setFieldValue("movers", 1);
     }

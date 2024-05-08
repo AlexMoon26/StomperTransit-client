@@ -24,7 +24,6 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
-import { Formik, Form } from "formik";
 import { LoadingButton } from "@mui/lab";
 
 interface Props {
@@ -39,7 +38,9 @@ const validationSchema = Yup.object().shape({
   pointB: Yup.string()
     .required("Точка B обязательна")
     .notOneOf([Yup.ref("pointA"), null], "Точки не должны совпадать"),
-  approximateTime: Yup.date().required("Ориентировочная дата обязательна"),
+  approximateTime: Yup.date()
+    .required("Ориентировочное время обязательно")
+    .min(moment().startOf("day"), "Дата не может быть в прошлом"),
   weight: Yup.number()
     .required("Вес обязателен")
     .positive("Вес должен быть положительным числом")
@@ -245,7 +246,7 @@ export function CreateOrderForm({ closeModal }: Props) {
                   }
                   slotProps={{
                     textField: {
-                      helperText: "Ориентировочная дата обязательна",
+                      helperText: formik.errors.approximateTime,
                     },
                   }}
                 />

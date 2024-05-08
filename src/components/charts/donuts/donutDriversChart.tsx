@@ -10,7 +10,7 @@ const DonutDriversChart = (props) => {
     datasets: [
       {
         data: [props.inProgress, props.free],
-        backgroundColor: ["rgba(74, 222, 128)", "rgba(55, 65, 81, 0.1)"],
+        backgroundColor: ["#86C232", "rgba(55, 65, 81, 0.1)"],
 
         borderWidth: 1,
       },

@@ -3,11 +3,16 @@ import { apiFetch } from "@/config/apiFetch";
 import { Order, OrderFull } from "@/types";
 import { revalidateTag } from "next/cache";
 
-export async function getOrders() {
-  const response = await apiFetch(`orders`, {
-    cache: "no-store",
-    headers: { "Content-Type": "application/json" },
-  });
+export async function getOrders(status?: string, limit?: number) {
+  const response = await apiFetch(
+    `orders?${status ? `status=${status}` : ``}&${
+      limit ? `limit=${limit}` : ``
+    }`,
+    {
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
   return response;
 }
 

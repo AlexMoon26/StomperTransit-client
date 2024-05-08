@@ -38,8 +38,8 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
           : {}),
       }}
       onClick={() =>
-        OrderStatus[formik.values.status] !== "Выполняется" &&
-        formik.setFieldValue("typeOfCar", value)
+        OrderStatus[formik.values.status] === "В ожидании" ||
+        (!formik.values.status && formik.setFieldValue("typeOfCar", value))
       }
     >
       <img
@@ -49,7 +49,10 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
       />
       <Typography variant="body2">{label}</Typography>
       <Radio
-        disabled={OrderStatus[formik.values.status] === "Выполняется"}
+        disabled={
+          OrderStatus[formik.values.status] === "Выполняется" ||
+          OrderStatus[formik.values.status] === "Выполнена"
+        }
         checked={formik.values.typeOfCar === value}
       />
     </Box>
@@ -60,7 +63,7 @@ export const BodySize = ({ value, formik }) => {
   return (
     <Box
       onClick={() =>
-        OrderStatus[formik.values.status] !== "Выполняется" &&
+        OrderStatus[formik.values.status] === "В ожидании" &&
         formik.setFieldValue("bodySize", value)
       }
       sx={{

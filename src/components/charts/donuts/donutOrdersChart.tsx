@@ -13,7 +13,7 @@ const DonutOrdersChart = (props) => {
         backgroundColor: [
           "rgba(192, 132, 252)",
           "rgba(249, 115, 22)",
-          "rgba(74, 222, 128)",
+          "#86C232",
         ],
 
         borderWidth: 1,

@@ -2,11 +2,12 @@ import { Calc } from "@/features/Calc";
 import { LatestCustomers } from "@/features/LatestCustomers";
 import { Orders } from "@/widgets/Orders";
 import { ButtonsAdminPage } from "@/features/ButtonsAdminPage";
-import { getPendingOrders } from "@/api/orders";
+import { getOrders, getPendingOrders } from "@/api/orders";
 import { DonutsList } from "@/components/charts/donutsList";
 
 async function mainPage() {
   const orders = await getPendingOrders();
+  const lastCompletedOrders = await getOrders("completed", 3);
   return (
     <div>
       <div className="flex max-xl:flex-col max-xl:items-center justify-between  gap-4 mb-10">
@@ -14,26 +15,7 @@ async function mainPage() {
 
         <div className="flex max-xl:w-full w-1/2 justify-end">
           <LatestCustomers
-            orders={[
-              {
-                customerName: "Вороненко Александр",
-                email: "voronenko.alexander@mail.ru",
-                price: "2 500",
-                date: "16.10.23",
-              },
-              {
-                customerName: "Вороненко Александр",
-                email: "voronenko.alexander@mail.ru",
-                price: "2 500",
-                date: "16.10.23",
-              },
-              {
-                customerName: "Вороненко Александр",
-                email: "voronenko.alexander@mail.ru",
-                price: "2 500",
-                date: "16.10.23",
-              },
-            ]}
+            orders={lastCompletedOrders ? lastCompletedOrders : []}
           />
         </div>
       </div>

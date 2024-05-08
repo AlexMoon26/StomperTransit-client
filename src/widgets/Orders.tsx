@@ -14,7 +14,7 @@ export const Orders = ({ orders }: Props) => {
   return (
     <>
       {orders?.length < 1 && (
-        <Box className="flex bg-white justify-center h-full items-center min-h-[200px]">
+        <Box className="flex bg-white shadow rounded justify-center h-full items-center min-h-[200px]">
           Нет заявок в ожидании
         </Box>
       )}

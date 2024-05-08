@@ -48,13 +48,17 @@ const validationSchema = Yup.object().shape({
   pointB: Yup.string()
     .required("Точка B обязательна")
     .notOneOf([Yup.ref("pointA"), null], "Точки не должны совпадать"),
-  approximateTime: Yup.date().required("Ориентировочное время обязательно"),
+  approximateTime: Yup.date()
+    .required("Ориентировочное время обязательно")
+    .min(moment(), "Дата не может быть в прошлом"),
   weight: Yup.number()
     .required("Вес обязателен")
     .positive("Вес должен быть положительным числом")
     .max(2000, "Вес не должен превышать 2000 кг"),
-  // driver: Yup.object()
-  //   .when("status")
+  driver: Yup.object().when(["status"], {
+    is: (status) => status === "inProgress" || status === "completed",
+    then: Yup.object().required("Водитель обязателен"),
+  }),
 });
 
 export function EditOrderForm({ order, closeModal }: Props) {
@@ -201,10 +205,11 @@ export function EditOrderForm({ order, closeModal }: Props) {
             getOptionLabel={(option) => OrderStatus[option]}
             renderInput={(params) => <TextField {...params} label="Статус" />}
           />
-          {OrderStatus[formik.values.status] === "Выполняется" && (
+          {OrderStatus[formik.values.status] !== "В ожидании" && (
             <Autocomplete
               disablePortal
               id="driver"
+              disabled={OrderStatus[formik.values.status] === "Выполнена"}
               options={drivers}
               isOptionEqualToValue={(option, value) =>
                 option.firstName === value?.firstName
@@ -215,14 +220,23 @@ export function EditOrderForm({ order, closeModal }: Props) {
                 `${driver.firstName} ${driver.surName}`
               }
               renderInput={(params) => (
-                <TextField {...params} label="Водитель" />
+                <TextField
+                  name="driver"
+                  error={formik.touched.driver && Boolean(formik.errors.driver)}
+                  helperText={formik.errors.driver && formik.errors.driver}
+                  {...params}
+                  label="Водитель"
+                />
               )}
             />
           )}
           <Autocomplete
             disablePortal
             options={places}
-            disabled={OrderStatus[formik.values.status] === "Выполняется"}
+            disabled={
+              OrderStatus[formik.values.status] === "Выполняется" ||
+              OrderStatus[formik.values.status] === "Выполнена"
+            }
             color="primary"
             id="pointA"
             noOptionsText="Не найдено"
@@ -255,7 +269,10 @@ export function EditOrderForm({ order, closeModal }: Props) {
           <Autocomplete
             disablePortal
             options={places}
-            disabled={OrderStatus[formik.values.status] === "Выполняется"}
+            disabled={
+              OrderStatus[formik.values.status] === "Выполняется" ||
+              OrderStatus[formik.values.status] === "Выполнена"
+            }
             color="primary"
             noOptionsText="Не найдено"
             id="pointB"
@@ -290,6 +307,10 @@ export function EditOrderForm({ order, closeModal }: Props) {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   className="w-full"
+                  disabled={
+                    OrderStatus[formik.values.status] === "Выполняется" ||
+                    OrderStatus[formik.values.status] === "Выполнена"
+                  }
                   label="Ориентировочная дата"
                   name="approximateTime"
                   disablePast
@@ -299,7 +320,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
                   }
                   slotProps={{
                     textField: {
-                      helperText: "Ориентировочная дата обязательна",
+                      helperText: formik.errors.approximateTime,
                     },
                   }}
                 />
@@ -308,6 +329,10 @@ export function EditOrderForm({ order, closeModal }: Props) {
             <div className="grid grid-cols-6 max-md:grid-cols-3 items-center gap-5">
               <Button
                 variant="outlined"
+                disabled={
+                  OrderStatus[formik.values.status] === "Выполняется" ||
+                  OrderStatus[formik.values.status] === "Выполнена"
+                }
                 size="small"
                 onClick={handleTodayClick}
               >
@@ -315,6 +340,10 @@ export function EditOrderForm({ order, closeModal }: Props) {
               </Button>
               <Button
                 variant="outlined"
+                disabled={
+                  OrderStatus[formik.values.status] === "Выполняется" ||
+                  OrderStatus[formik.values.status] === "Выполнена"
+                }
                 size="small"
                 onClick={handleTommorowClick}
               >
@@ -323,7 +352,10 @@ export function EditOrderForm({ order, closeModal }: Props) {
             </div>
           </Box>
           <TextField
-            disabled={OrderStatus[formik.values.status] === "Выполняется"}
+            disabled={
+              OrderStatus[formik.values.status] === "Выполняется" ||
+              OrderStatus[formik.values.status] === "Выполнена"
+            }
             type="number"
             label="Вес"
             name="weight"

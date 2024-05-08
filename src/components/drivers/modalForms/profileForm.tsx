@@ -7,6 +7,7 @@ import { Button, TextField } from "@mui/material";
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
 import { toast } from "sonner";
 import { updateDriver } from "@/api/drivers";
+import { LoadingButton } from "@mui/lab";
 
 interface Props {
   driver: UserFull;
@@ -34,6 +35,7 @@ export function ProfileForm({ driver, closeModal }: Props) {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        formik.setSubmitting(true);
         const response = await updateDriver(values, driver._id);
 
         if (!response) throw new Error(response);
@@ -43,6 +45,8 @@ export function ProfileForm({ driver, closeModal }: Props) {
         console.log(err);
         closeModal();
         toast.error("Водитель не был изменен!");
+      } finally {
+        formik.setSubmitting(false);
       }
     },
   });
@@ -98,9 +102,15 @@ export function ProfileForm({ driver, closeModal }: Props) {
             Созвониться
           </Button>
         )}
-        <Button fullWidth type="submit">
+        <LoadingButton
+          loading={formik.isSubmitting}
+          disabled={formik.isSubmitting}
+          type="submit"
+          variant="contained"
+          fullWidth
+        >
           Сохранить
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

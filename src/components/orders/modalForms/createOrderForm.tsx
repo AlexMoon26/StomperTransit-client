@@ -24,6 +24,9 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
+import { Formik, Form } from "formik";
+import { LoadingButton } from "@mui/lab";
+
 interface Props {
   closeModal: () => void;
 }
@@ -61,6 +64,7 @@ export function CreateOrderForm({ closeModal }: Props) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      formik.setSubmitting(true);
       try {
         const response = await createOrder(values);
         if (!response) throw new Error(response);
@@ -70,6 +74,8 @@ export function CreateOrderForm({ closeModal }: Props) {
         console.log(err);
         closeModal();
         toast.error("Заявка не была создана!");
+      } finally {
+        formik.setSubmitting(false);
       }
     },
   });
@@ -337,9 +343,14 @@ export function CreateOrderForm({ closeModal }: Props) {
 
       {/*footer*/}
       <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-        <Button type="submit" variant="contained">
+        <LoadingButton
+          type="submit"
+          loading={formik.isSubmitting}
+          variant="contained"
+          disabled={formik.isSubmitting}
+        >
           Создать
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

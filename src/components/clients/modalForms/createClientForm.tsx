@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { User } from "@/types";
 import { createClient } from "@/api/clients";
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
+import { LoadingButton } from "@mui/lab";
 
 interface Props {
   closeModal: () => void;
@@ -29,6 +30,7 @@ export function CreateClientForm({ closeModal }: Props) {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        formik.setSubmitting(true);
         const response = await createClient(values);
         if (response.error) throw new Error(response.error);
         toast.success(`Клиент успешно создан`);
@@ -38,6 +40,8 @@ export function CreateClientForm({ closeModal }: Props) {
       } catch (err) {
         closeModal();
         toast.error(`${err}`);
+      } finally {
+        formik.setSubmitting(false);
       }
     },
   });
@@ -112,9 +116,14 @@ export function CreateClientForm({ closeModal }: Props) {
 
       {/*footer*/}
       <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-        <Button type="submit" variant="contained">
+        <LoadingButton
+          loading={formik.isSubmitting}
+          disabled={formik.isSubmitting}
+          type="submit"
+          variant="contained"
+        >
           Создать клиента
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

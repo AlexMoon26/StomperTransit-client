@@ -2,6 +2,7 @@
 import { updateAdmin } from "@/api/admin";
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
 import { UserFull } from "@/types";
+import { LoadingButton } from "@mui/lab";
 import { Box, Button, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import Image from "next/image";
@@ -37,12 +38,15 @@ export function Account({ user }: Props) {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        formik.setSubmitting(true);
         await updateAdmin(values, user._id);
         router.refresh();
         toast.success("Профиль успешно обновлен!");
       } catch (err) {
         console.log(err);
         toast.error("Профиль не был изменен!");
+      } finally {
+        formik.setSubmitting(false);
       }
     },
   });
@@ -108,9 +112,15 @@ export function Account({ user }: Props) {
         error={formik.touched.phone && Boolean(formik.errors.phone)}
         helperText={formik.touched.phone && formik.errors.phone}
       />
-      <Button fullWidth type="submit">
+      <LoadingButton
+        type="submit"
+        loading={formik.isSubmitting}
+        variant="contained"
+        fullWidth
+        disabled={formik.isSubmitting}
+      >
         Сохранить
-      </Button>
+      </LoadingButton>
     </form>
   );
 }

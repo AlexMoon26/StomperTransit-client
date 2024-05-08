@@ -6,6 +6,7 @@ import { Button, TextField } from "@mui/material";
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
 import { updateClient } from "@/api/clients";
 import { toast } from "sonner";
+import { LoadingButton } from "@mui/lab";
 
 interface Props {
   client: UserFull;
@@ -34,6 +35,7 @@ export function ProfileForm({ client, closeModal }: Props) {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        formik.setSubmitting(true);
         const response = await updateClient(values, client._id);
         if (!response) throw new Error(response);
         toast.success(`${response.message}`);
@@ -42,6 +44,8 @@ export function ProfileForm({ client, closeModal }: Props) {
         console.log(err);
         closeModal();
         toast.error("Клиент не был изменен!");
+      } finally {
+        formik.setSubmitting(false);
       }
     },
   });
@@ -103,9 +107,15 @@ export function ProfileForm({ client, closeModal }: Props) {
             Созвониться
           </Button>
         )}
-        <Button fullWidth type="submit">
+        <LoadingButton
+          loading={formik.isSubmitting}
+          disabled={formik.isSubmitting}
+          type="submit"
+          variant="contained"
+          fullWidth
+        >
           Сохранить
-        </Button>
+        </LoadingButton>
       </div>
     </form>
   );

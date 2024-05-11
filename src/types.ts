@@ -48,6 +48,15 @@ export interface OrderFull extends Order {
   driver?: User;
 }
 
+export interface Calc {
+  pointA: string;
+  pointB: string;
+  weight: number;
+  typeOfCar: string;
+  bodySize: string;
+  movers: number | null;
+}
+
 export interface User {
   firstName: string;
   surName: string;

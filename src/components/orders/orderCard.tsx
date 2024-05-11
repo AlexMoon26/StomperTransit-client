@@ -45,10 +45,10 @@ export const OrderCard = ({ order }: Props) => {
       >
         <Box className="w-full flex flex-col gap-3 justify-center">
           <Box className="flex items-center justify-between">
-            <h5 className="text-gray-400">ID: {order._id}</h5>
+            <h5 className="text-gray-400 truncate">ID: {order._id}</h5>
 
             <span
-              className={`inline-flex items-center  ${
+              className={`inline-flex items-center justify-center max-sm:w-1/3 ${
                 OrderStatus[order.status] === "В ожидании" &&
                 "text-purple-700 bg-purple-100"
               } ${

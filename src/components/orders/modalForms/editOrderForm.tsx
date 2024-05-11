@@ -131,6 +131,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
     if (formik.values.typeOfCar !== "cargo") {
       setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
+      formik.setFieldValue("movers", "");
     } else {
       if (bodySize !== "") {
         formik.setFieldValue("bodySize", bodySize);
@@ -145,6 +146,8 @@ export function EditOrderForm({ order, closeModal }: Props) {
     }
     if (formik.values.weight < 100) {
       formik.setFieldValue("typeOfCar", "express");
+      formik.setFieldValue("bodySize", "");
+      formik.setFieldValue("movers", "");
     }
     if (formik.values.weight < 300) {
       formik.setFieldValue("bodySize", "S");
@@ -390,14 +393,14 @@ export function EditOrderForm({ order, closeModal }: Props) {
           </FormControl>
           {formik.values.typeOfCar === "cargo" && (
             <>
-              <Box className="flex justify-between bg-gray-100 rounded-xl">
-                <Box className="flex flex-col w-1/2 justify-center items-center">
+              <Box className="flex justify-between max-sm:flex-col max-sm:items-center bg-gray-100 rounded-xl">
+                <Box className="flex flex-col w-1/2 max-sm:mt-4 justify-center items-center">
                   <Typography>{bodySizeMap[formik.values.bodySize]}</Typography>
                   <Typography className="text-gray-400" fontSize="small">
                     до {bodyWeightMap[formik.values.bodySize]} кг
                   </Typography>
                 </Box>
-                <Box className="bg-gray-200 rounded w-1/2 h-16 m-5">
+                <Box className="bg-gray-200 rounded w-1/2 max-sm:w-[80%] h-16 m-5">
                   <RadioGroup
                     className="flex justify-center items-center h-full"
                     id="typeOfCar"

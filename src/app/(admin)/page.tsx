@@ -1,4 +1,4 @@
-import { Calc } from "@/features/Calc";
+import { Calculator } from "@/components/calculator";
 import { LatestCustomers } from "@/features/LatestCustomers";
 import { Orders } from "@/widgets/Orders";
 import { ButtonsAdminPage } from "@/features/ButtonsAdminPage";
@@ -25,9 +25,8 @@ async function mainPage() {
           <ButtonsAdminPage />
           <Orders orders={orders ? orders : []} />
         </div>
-        <div className="p-10 w-1/2 bg-white rounded max-lg:w-full max-h-[556.5px] shadow">
-          <Calc />
-        </div>
+
+        <Calculator />
       </div>
     </div>
   );

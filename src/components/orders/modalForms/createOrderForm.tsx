@@ -112,6 +112,7 @@ export function CreateOrderForm({ closeModal }: Props) {
     if (formik.values.typeOfCar !== "cargo") {
       setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
+      formik.setFieldValue("movers", "");
     } else {
       if (bodySize !== "") {
         formik.setFieldValue("bodySize", bodySize);
@@ -126,6 +127,8 @@ export function CreateOrderForm({ closeModal }: Props) {
     }
     if (formik.values.weight < 100) {
       formik.setFieldValue("typeOfCar", "express");
+      formik.setFieldValue("bodySize", "");
+      formik.setFieldValue("movers", "");
     }
     if (formik.values.weight < 300) {
       formik.setFieldValue("bodySize", "S");

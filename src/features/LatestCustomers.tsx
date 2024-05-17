@@ -12,7 +12,7 @@ interface Props {
 export const LatestCustomers = ({ orders }: Props) => {
   return (
     <>
-      <div className="w-full p-4 bg-white border border-gray-200 rounded shadow sm:p-8 ">
+      <div className="w-full p-4 min-h-[166px] bg-white border border-gray-200 rounded shadow sm:p-8 ">
         <div className="flex items-center justify-between mb-4">
           <h5 className="text-xl font-bold leading-none text-gray-600">
             Выполненные заявки

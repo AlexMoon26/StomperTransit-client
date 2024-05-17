@@ -8,7 +8,7 @@ interface Props {
   orders: OrderFull[];
 }
 
-export const Orders = ({ orders }: Props) => {
+export default function Orders({ orders }: Props) {
   const [showFullList, setShowFullList] = useState(false);
 
   return (
@@ -40,4 +40,4 @@ export const Orders = ({ orders }: Props) => {
       )}
     </>
   );
-};
+}

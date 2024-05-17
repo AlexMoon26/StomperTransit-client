@@ -1,5 +1,6 @@
 import { getClients } from "@/api/clients";
-import { ClientsList } from "@/components/clients/clientsList";
+import ClientsList from "@/components/clients/clientsList";
+
 import React from "react";
 
 async function ClientsPage() {

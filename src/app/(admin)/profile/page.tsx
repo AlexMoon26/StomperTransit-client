@@ -1,5 +1,5 @@
 import { profile } from "@/api/auth";
-import { Account } from "@/components/admin/account";
+import Account from "@/components/admin/account";
 import React from "react";
 
 async function ProfilePage() {

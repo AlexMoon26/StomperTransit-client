@@ -123,11 +123,6 @@ export function LoginPage() {
                   Забыли пароль?
                 </Link>
               </Grid>
-              <Grid item>
-                <Link href="/signup" className="text-green-500 underline">
-                  {"Нет аккаунта? Зарегистрироваться"}
-                </Link>
-              </Grid>
             </Grid>
             <Copyright sx={{ mt: 5 }} />
           </Box>

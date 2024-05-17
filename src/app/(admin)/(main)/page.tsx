@@ -1,9 +1,14 @@
 import { Calculator } from "@/components/calculator";
 import { LatestCustomers } from "@/features/LatestCustomers";
-import { Orders } from "@/widgets/Orders";
 import { ButtonsAdminPage } from "@/features/ButtonsAdminPage";
 import { getOrders, getPendingOrders } from "@/api/orders";
 import { DonutsList } from "@/components/charts/donutsList";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@mui/material";
+
+const DynamicOrders = dynamic(() => import("@/widgets/Orders"), {
+  loading: () => <Skeleton variant="rounded" width={210} height={60} />,
+});
 
 async function mainPage() {
   const orders = await getPendingOrders();
@@ -23,7 +28,7 @@ async function mainPage() {
       <div className="flex max-lg:flex-col max-md:items-center justify-between gap-4 mb-4">
         <div className="flex flex-col gap-4 rounded w-1/2 max-lg:w-full ">
           <ButtonsAdminPage />
-          <Orders orders={orders ? orders : []} />
+          <DynamicOrders orders={orders ? orders : []} />
         </div>
 
         <Calculator />

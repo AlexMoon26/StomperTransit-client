@@ -19,7 +19,7 @@ interface Props {
   clients: User[];
 }
 
-export function ClientsList({ clients }: Props) {
+export default function ClientsList({ clients }: Props) {
   const { openModal, closeModal } = useContext(ModalContext);
   const [searchTerm, setSearchTerm] = useState("");
   const { isDesktop } = useScreenWidth();

@@ -1,6 +1,6 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import { ChartLoader } from "./chartLoader";
+import { ChartLoader } from "../loaders/chartLoader";
 import { getOrdersCount } from "@/api/orders";
 import { Typography } from "@mui/material";
 

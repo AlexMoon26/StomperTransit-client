@@ -5,7 +5,7 @@ import { OrderFull } from "@/types";
 async function OrdersPage() {
   const orders: OrderFull[] = await getOrders();
 
-  return <OrdersList orders={orders} />;
+  return <OrdersList orders={orders ? orders : []} />;
 }
 
 export default OrdersPage;

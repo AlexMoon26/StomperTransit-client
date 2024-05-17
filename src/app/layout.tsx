@@ -11,6 +11,7 @@ import { ModalProvider } from "@/components/modalContext";
 import { Suspense } from "react";
 import { User } from "@/types";
 import { profile } from "@/api/auth";
+import Loader from "@/components/loaders/default";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,7 +35,7 @@ export default async function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <ModalProvider>
-              <Suspense fallback={<CircularProgress />}>{children}</Suspense>
+              <Suspense fallback={<Loader />}>{children}</Suspense>
             </ModalProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>

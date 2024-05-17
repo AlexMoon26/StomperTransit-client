@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
   surName: Yup.string().required("Фамилия обязательна!"),
 });
 
-export function Account({ user }: Props) {
+export default function Account({ user }: Props) {
   const router = useRouter();
   const formik = useFormik<UserFull>({
     initialValues: {
@@ -50,10 +50,6 @@ export function Account({ user }: Props) {
       }
     },
   });
-
-  if (!user) {
-    return <></>;
-  }
   return (
     <form
       onSubmit={formik.handleSubmit}

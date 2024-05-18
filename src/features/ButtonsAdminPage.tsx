@@ -4,10 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import { Button } from "@mui/material";
 import { ModalContext } from "@/components/modalContext";
 import { CreateOrderForm } from "@/components/orders/modalForms/createOrderForm";
-
-const ReportForm = () => {
-  return <>123</>;
-};
+import { OrdersByDateRangeForm } from "@/components/reports/modalForms/ordersByDateRangeForm";
 
 export const ButtonsAdminPage = () => {
   const { openModal, closeModal } = useContext(ModalContext);
@@ -22,7 +19,7 @@ export const ButtonsAdminPage = () => {
 
   const generateReport = async () => {
     openModal({
-      component: ReportForm,
+      component: OrdersByDateRangeForm,
       props: { closeModal },
       title: "Создание отчета",
     });

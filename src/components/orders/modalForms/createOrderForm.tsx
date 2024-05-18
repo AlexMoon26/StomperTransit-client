@@ -17,7 +17,7 @@ import { Order, Places, User, bodySizeMap, bodyWeightMap } from "@/types";
 import { createOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
-import { BodySize, DeliveryOption, deliveryOptions } from "../DeliveryOption";
+import { BodySize, DeliveryOption, deliveryOptions } from "../deliveryOption";
 import moment, { Moment } from "moment";
 import { handleSearchPlaces } from "@/config/searchPlaces";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";

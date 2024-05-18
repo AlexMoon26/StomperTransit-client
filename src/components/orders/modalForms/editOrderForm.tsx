@@ -23,7 +23,7 @@ import {
 import { editOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
-import { BodySize, DeliveryOption, deliveryOptions } from "../DeliveryOption";
+import { BodySize, DeliveryOption, deliveryOptions } from "../deliveryOption";
 import moment, { Moment } from "moment";
 import { handleSearchPlaces } from "@/config/searchPlaces";
 

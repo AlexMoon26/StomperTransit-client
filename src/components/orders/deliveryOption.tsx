@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Radio, Typography } from "@mui/material";
-import Image from "next/image";
 import { OrderStatus } from "@/types";
 
 export const deliveryOptions = [

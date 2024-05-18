@@ -4,7 +4,7 @@ import {
   BodySize,
   DeliveryOption,
   deliveryOptions,
-} from "@/components/orders/DeliveryOption";
+} from "@/components/orders/deliveryOption";
 import { handleSearchPlaces } from "@/config/searchPlaces";
 import { Calc, Places, bodySizeMap, bodyWeightMap } from "@/types";
 import { LoadingButton } from "@mui/lab";

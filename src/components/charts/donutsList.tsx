@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { ChartLoader } from "../loaders/chartLoader";
 import { getOrdersCount } from "@/api/orders";
 import { Typography } from "@mui/material";
+import { getFreeDrivers } from "@/api/drivers";
 
 const DynamicOrdersChart = dynamic(
   () => import("@/components/charts/donuts/donutOrdersChart"),
@@ -21,6 +22,8 @@ const DynamicDriversChart = dynamic(
 );
 export async function DonutsList() {
   const orders = await getOrdersCount();
+  const freeDrivers = await getFreeDrivers();
+
   return (
     <div className="flex max-lg:w-full w-1/2 gap-6 items-center justify-center">
       {orders && (orders.pending || orders.inProgress || orders.completed) ? (
@@ -36,12 +39,14 @@ export async function DonutsList() {
           <Typography>Заявок нет</Typography>
         </div>
       )}
-      <DynamicDriversChart
-        inProgress={4}
-        free={3}
-        backgroundColor={"#222629"}
-        name={"Водители"}
-      />
+      {orders && (
+        <DynamicDriversChart
+          inProgress={orders.inProgress}
+          free={freeDrivers.length}
+          backgroundColor={"#222629"}
+          name={"Водители"}
+        />
+      )}
     </div>
   );
 }

@@ -38,7 +38,6 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LoadingButton } from "@mui/lab";
-import { Unstable_NumberInput as NumberInput } from "@mui/base";
 
 interface Props {
   order: OrderFull;
@@ -67,8 +66,7 @@ const validationSchema = Yup.object().shape({
 export function EditOrderForm({ order, closeModal }: Props) {
   const [drivers, setDrivers] = useState<User[]>([]);
   const [places, setPlaces] = useState<Places[]>([]);
-  const [bodySize, setBodySize] = useState("");
-  const formik = useFormik({
+  const formik = useFormik<OrderFull>({
     initialValues: {
       _id: order._id,
       status: order.status,
@@ -83,6 +81,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
       driverStatus: order.driverStatus,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
+      cost: order.cost,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -123,7 +122,9 @@ export function EditOrderForm({ order, closeModal }: Props) {
   useEffect(() => {
     (async () => {
       try {
-        const response = await apiFetch(`drivers`);
+        const response = await apiFetch(`drivers/free`);
+        console.log(response);
+
         setDrivers(response);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -132,16 +133,8 @@ export function EditOrderForm({ order, closeModal }: Props) {
   }, []);
 
   useEffect(() => {
-    if (formik.values.typeOfCar !== "cargo") {
-      setBodySize(formik.values.bodySize);
-      formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", 0);
-    } else {
-      if (bodySize !== "") {
-        formik.setFieldValue("bodySize", bodySize);
-      } else {
-        formik.setFieldValue("bodySize", "S");
-      }
+    if (formik.values.typeOfCar !== "cargo" && !formik.values.bodySize) {
+      formik.setFieldValue("bodySize", "S");
     }
   }, [formik.values.typeOfCar]);
 
@@ -191,6 +184,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
           {OrderStatus[formik.values.status] !== "В ожидании" && (
             <Autocomplete
               disablePortal
+              noOptionsText="Нет свободных водителей"
               id="driver"
               disabled={OrderStatus[formik.values.status] === "Выполнена"}
               options={drivers}

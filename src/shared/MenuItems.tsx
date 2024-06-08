@@ -17,7 +17,7 @@ export const MenuItems = ({ name, path, Icon, onClick }: IProps) => {
   const pathname = usePathname();
 
   const isCurrentPage = (page) => {
-    return pathname!.endsWith(page);
+    return pathname!.includes(page);
   };
 
   return (

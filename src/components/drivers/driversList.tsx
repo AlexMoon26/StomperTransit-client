@@ -13,6 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useContext, useState } from "react";
 import { ModalContext } from "../modalContext";
 import { DriverCard } from "./driverCard";
+import { CreateDriverForm } from "./modalForms/createDriverForm";
 
 interface Props {
   drivers: UserFull[];
@@ -23,13 +24,13 @@ export function DriversList({ drivers }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const { isDesktop } = useScreenWidth();
 
-  //   const handleNewClient = () => {
-  //     openModal({
-  //       component: CreateClientForm,
-  //       props: { closeModal },
-  //       title: "Создание нового водителя",
-  //     });
-  //   };
+  const handleNewClient = () => {
+    openModal({
+      component: CreateDriverForm,
+      props: { closeModal },
+      title: "Создание нового водителя",
+    });
+  };
   const searchTextLower = searchTerm.toLowerCase().split(" ");
   const filteredDrivers = drivers.filter((item) => {
     const firstNameLower = item.firstName.toLowerCase();
@@ -62,7 +63,9 @@ export function DriversList({ drivers }: Props) {
         </Box>
       </Box>
       <Box className="mb-4">
-        <Button fullWidth>Добавить водителя</Button>
+        <Button onClick={handleNewClient} fullWidth>
+          Добавить водителя
+        </Button>
       </Box>
 
       {filteredDrivers.length > 0 ? (

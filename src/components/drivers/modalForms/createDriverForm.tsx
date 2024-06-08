@@ -7,6 +7,7 @@ import { User } from "@/types";
 import { createClient } from "@/api/clients";
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
 import { LoadingButton } from "@mui/lab";
+import { createDriver } from "@/api/drivers";
 
 interface Props {
   closeModal: () => void;
@@ -17,22 +18,21 @@ const validationSchema = Yup.object().shape({
   surName: Yup.string().required("Фамилия обязательна"),
 });
 
-export function CreateClientForm({ closeModal }: Props) {
+export function CreateDriverForm({ closeModal }: Props) {
   const formik = useFormik<User>({
     initialValues: {
       firstName: "",
       surName: "",
       phone: "",
       email: "",
-      ordersMade: 0,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
         formik.setSubmitting(true);
-        const response = await createClient(values);
+        const response = await createDriver(values);
         if (response.error) throw new Error(response.error);
-        toast.success(`Клиент успешно создан`);
+        toast.success(`Водитель успешно создан`);
 
         closeModal();
       } catch (err) {
@@ -120,7 +120,7 @@ export function CreateClientForm({ closeModal }: Props) {
           type="submit"
           variant="contained"
         >
-          Создать клиента
+          Создать водителя
         </LoadingButton>
       </div>
     </form>

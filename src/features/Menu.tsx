@@ -28,7 +28,7 @@ export function Menu({ handleSidebarToggle }) {
         <MenuItems
           name={"Главная"}
           Icon={HomeIcon}
-          path={"/"}
+          path={"home"}
           handleSidebarToggle={handleSidebarToggle}
         />
         <MenuItems name="Профиль" Icon={PersonIcon} path="profile" />

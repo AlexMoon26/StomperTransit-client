@@ -19,10 +19,17 @@ export async function getClientById(id: number) {
   return response;
 }
 
-export async function getClientOrdersById(id: number) {
-  const response = await apiFetch(`users/${id}/orders`, {
-    headers: { "Content-Type": "application/json" },
-  });
+export async function getClientOrdersById(
+  id: number,
+  take: number = 5,
+  skip: number = 0
+) {
+  const response = await apiFetch(
+    `users/${id}/orders?take=${take}&skip=${skip}`,
+    {
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 
   return response;
 }

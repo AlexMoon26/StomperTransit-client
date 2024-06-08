@@ -9,6 +9,7 @@ import { ModalContext } from "@/components/modalContext";
 import { EditOrderForm } from "@/components/orders/modalForms/editOrderForm";
 import { deleteOrder } from "@/api/orders";
 import { toast } from "sonner";
+import Link from "next/link";
 import "moment/locale/ru";
 
 interface Props {
@@ -72,8 +73,11 @@ export const SmallOrderCard = ({ order }: Props) => {
             </span>
           </Box>
 
-          <h5 className="text-gray-400">
-            Клиент: {order.client?.surName} {order.client?.firstName}
+          <h5 className="text-gray-400 ">
+            Клиент:{" "}
+            <Link className="underline" href={`/clients/${order.client?._id}`}>
+              {order.client?.surName} {order.client?.firstName}
+            </Link>
           </h5>
 
           <Box>
@@ -91,15 +95,20 @@ export const SmallOrderCard = ({ order }: Props) => {
           <h5 className="text-gray-500 dark:text-gray-400">
             Вид доставки: {DeliveryStatus[order.typeOfCar]} {order?.bodySize}
           </h5>
-          <Box className="w-full flex justify-end gap-3">
-            <IconButton onClick={handleDeleteOrder}>
-              <DeleteIcon color="error" />
-            </IconButton>
-            {OrderStatus[order.status] !== "Выполнена" && (
-              <IconButton onClick={handleOpenEditOrderModal}>
-                <ModeIcon color="warning" />
+          <Box className="flex justify-between items-center">
+            <h5 className="text-red-500 whitespace-nowrap">
+              Цена: {order.cost} Р
+            </h5>
+            <Box className="w-full flex justify-end gap-3">
+              <IconButton onClick={handleDeleteOrder}>
+                <DeleteIcon color="error" />
               </IconButton>
-            )}
+              {OrderStatus[order.status] !== "Выполнена" && (
+                <IconButton onClick={handleOpenEditOrderModal}>
+                  <ModeIcon color="warning" />
+                </IconButton>
+              )}
+            </Box>
           </Box>
         </Box>
       </div>

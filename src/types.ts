@@ -36,7 +36,7 @@ export enum bodySizeMap {
 }
 
 export interface Order {
-  client?: User;
+  client?: UserFull;
   pointA: string;
   pointB: string;
   typeOfCar: string;
@@ -52,6 +52,7 @@ export interface OrderFull extends Order {
   createdAt: Date;
   updatedAt: Date;
   driver?: Driver;
+  cost: number;
 }
 
 export interface Calc {
@@ -67,20 +68,21 @@ export interface User {
   surName: string;
   phone: string;
   email: string;
-  role: string;
+
   ordersMade?: number;
 }
 
 export interface Driver extends User {
   driverInfo: {
-    driverStatus: string
-  }
+    driverStatus: string;
+  };
 }
 
 export interface UserFull extends User {
   _id: string;
   password?: string;
   picturePath: string;
+  role: string;
   createdAt: Date;
   updatedAt: Date;
 }

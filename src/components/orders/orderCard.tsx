@@ -10,6 +10,7 @@ import { EditOrderForm } from "@/components/orders/modalForms/editOrderForm";
 import { deleteOrder } from "@/api/orders";
 import { toast } from "sonner";
 import "moment/locale/ru";
+import Link from "next/link";
 
 interface Props {
   order: OrderFull;
@@ -72,8 +73,11 @@ export const OrderCard = ({ order }: Props) => {
             </span>
           </Box>
 
-          <h5 className="text-gray-400">
-            Клиент: {order.client?.surName} {order.client?.firstName}
+          <h5 className="text-gray-400 ">
+            Клиент:{" "}
+            <Link className="underline" href={`/clients/${order.client?._id}`}>
+              {order.client?.surName} {order.client?.firstName}
+            </Link>
           </h5>
 
           <Box>
@@ -102,37 +106,42 @@ export const OrderCard = ({ order }: Props) => {
           ) : (
             ""
           )}
-          <Box className="flex">
-            <Box className="flex w-full items-center">
-              {OrderStatus[order.status] === "В ожидании" ? (
-                <span className="font-normal leading-tight hover:cursor-pointer dark:text-purple-400">
-                  Выберите водителя
-                </span>
-              ) : OrderStatus[order.status] === "Выполняется" ? (
-                <>
-                  <span className="font-normal leading-tight  dark:text-orange-400 whitespace-nowrap">
-                    Водитель - {` `}
-                    {`${order.driver?.firstName || ""} ${
-                      order.driver?.surName || ""
-                    }`}{" "}
-                    {order.driver?.driverInfo.driverStatus}
+          <Box className="flex flex-col">
+            <h5 className="text-red-500 whitespace-nowrap">
+              Цена: {order.cost} Р
+            </h5>
+            <Box className="flex justify-between items-center">
+              <Box className="flex w-full items-center">
+                {OrderStatus[order.status] === "В ожидании" ? (
+                  <span className="font-normal leading-tight hover:cursor-pointer dark:text-purple-400">
+                    Выберите водителя
                   </span>
-                </>
-              ) : (
-                <span className="font-normal leading-tight  dark:text-green-500">
-                  Водитель - {order.driver?.firstName} {order.driver?.surName}
-                </span>
-              )}
-            </Box>
-            <Box className="w-full flex justify-end gap-3">
-              <IconButton onClick={handleDeleteOrder}>
-                <DeleteIcon color="error" />
-              </IconButton>
-              {OrderStatus[order.status] !== "Выполнена" && (
-                <IconButton onClick={handleOpenEditOrderModal}>
-                  <ModeIcon color="warning" />
+                ) : OrderStatus[order.status] === "Выполняется" ? (
+                  <>
+                    <span className="font-normal leading-tight  dark:text-orange-400 whitespace-nowrap">
+                      Водитель - {` `}
+                      {`${order.driver?.firstName || ""} ${
+                        order.driver?.surName || ""
+                      }`}{" "}
+                      {order.driver?.driverInfo.driverStatus}
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-normal leading-tight  dark:text-green-500">
+                    Водитель - {order.driver?.firstName} {order.driver?.surName}
+                  </span>
+                )}
+              </Box>
+              <Box className="w-full flex justify-end gap-3">
+                <IconButton onClick={handleDeleteOrder}>
+                  <DeleteIcon color="error" />
                 </IconButton>
-              )}
+                {OrderStatus[order.status] !== "Выполнена" && (
+                  <IconButton onClick={handleOpenEditOrderModal}>
+                    <ModeIcon color="warning" />
+                  </IconButton>
+                )}
+              </Box>
             </Box>
           </Box>
         </Box>

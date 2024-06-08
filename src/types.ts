@@ -14,7 +14,7 @@ export enum DeliveryStatus {
   cargo = "Грузовой",
 }
 
-export enum bodySizeMap {
+export enum bodyNameMap {
   S = "Кузов S",
   M = "Кузов M",
   L = "Кузов L",
@@ -22,17 +22,23 @@ export enum bodySizeMap {
 }
 
 export enum bodyWeightMap {
-  S = "300",
-  M = "700",
+  S = "500",
+  M = "1000",
   L = "1500",
   XL = "2000",
+}
+
+export enum bodySizeMap {
+  S = "1,8 x 1,6 x 1,1",
+  M = "2,8 x 1,8 x 1,7",
+  L = "3 x 1,8 x 1,8",
+  XL = "3,2 x 1,9 x 2",
 }
 
 export interface Order {
   client?: User;
   pointA: string;
   pointB: string;
-  weight: number;
   typeOfCar: string;
   bodySize: string;
   movers: number | null;
@@ -45,13 +51,12 @@ export interface OrderFull extends Order {
   driverStatus: string;
   createdAt: Date;
   updatedAt: Date;
-  driver?: User;
+  driver?: Driver;
 }
 
 export interface Calc {
   pointA: string;
   pointB: string;
-  weight: number;
   typeOfCar: string;
   bodySize: string;
   movers: number | null;
@@ -64,6 +69,12 @@ export interface User {
   email: string;
   role: string;
   ordersMade?: number;
+}
+
+export interface Driver extends User {
+  driverInfo: {
+    driverStatus: string
+  }
 }
 
 export interface UserFull extends User {

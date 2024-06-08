@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Radio, Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Radio,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { OrderStatus } from "@/types";
 
 export const deliveryOptions = [
@@ -36,10 +43,7 @@ export const DeliveryOption: React.FC<DeliveryOptionProps> = ({
           ? { backgroundColor: "#f5f5f5" }
           : {}),
       }}
-      onClick={() =>
-        OrderStatus[formik.values.status] === "В ожидании" ||
-        (!formik.values.status && formik.setFieldValue("typeOfCar", value))
-      }
+      onClick={() => formik.setFieldValue("typeOfCar", value)}
     >
       <img
         src={image}
@@ -62,8 +66,10 @@ export const BodySize = ({ value, formik }) => {
   return (
     <Box
       onClick={() =>
-        OrderStatus[formik.values.status] === "В ожидании" &&
-        formik.setFieldValue("bodySize", value)
+        formik.values.status
+          ? OrderStatus[formik.values.status] === "В ожидании" &&
+            formik.setFieldValue("bodySize", value)
+          : formik.setFieldValue("bodySize", value)
       }
       sx={{
         display: "flex",
@@ -83,6 +89,29 @@ export const BodySize = ({ value, formik }) => {
     >
       <Typography>{value}</Typography>
     </Box>
+  );
+};
+
+export const Movers = ({ formik }) => {
+  return (
+    <FormControl>
+      <FormLabel className="mb-4">Грузчики</FormLabel>
+
+      <TextField
+        disabled={
+          OrderStatus[formik.values.status] === "Выполняется" ||
+          OrderStatus[formik.values.status] === "Выполнена"
+        }
+        type="number"
+        name="movers"
+        id="movers"
+        value={formik.values.movers}
+        onChange={formik.handleChange}
+        inputProps={{ min: 0, max: 2 }}
+        variant="outlined"
+        fullWidth
+      />
+    </FormControl>
   );
 };
 

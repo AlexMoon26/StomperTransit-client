@@ -17,13 +17,19 @@ import {
   OrderStatus,
   Places,
   User,
+  bodyNameMap,
   bodySizeMap,
   bodyWeightMap,
 } from "@/types";
 import { editOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
-import { BodySize, DeliveryOption, deliveryOptions } from "../deliveryOption";
+import {
+  BodySize,
+  DeliveryOption,
+  Movers,
+  deliveryOptions,
+} from "../deliveryOption";
 import moment, { Moment } from "moment";
 import { handleSearchPlaces } from "@/config/searchPlaces";
 
@@ -32,6 +38,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LoadingButton } from "@mui/lab";
+import { Unstable_NumberInput as NumberInput } from "@mui/base";
 
 interface Props {
   order: OrderFull;
@@ -51,12 +58,8 @@ const validationSchema = Yup.object().shape({
   approximateTime: Yup.date()
     .required("Ориентировочное время обязательно")
     .min(moment(), "Дата не может быть в прошлом"),
-  weight: Yup.number()
-    .required("Вес обязателен")
-    .positive("Вес должен быть положительным числом")
-    .max(2000, "Вес не должен превышать 2000 кг"),
   driver: Yup.object().when(["status"], {
-    is: (status) => status === "inProgress" || status === "completed",
+    is: (status: string) => status === "inProgress" || status === "completed",
     then: Yup.object().required("Водитель обязателен"),
   }),
 });
@@ -71,7 +74,6 @@ export function EditOrderForm({ order, closeModal }: Props) {
       status: order.status,
       pointA: order.pointA,
       pointB: order.pointB,
-      weight: order.weight,
       client: order.client,
       driver: order.driver,
       typeOfCar: order.typeOfCar,
@@ -87,13 +89,15 @@ export function EditOrderForm({ order, closeModal }: Props) {
       try {
         formik.setSubmitting(true);
         const response = await editOrder(values, order._id);
-        if (!response) throw new Error(response);
+        if (response.status === 400) {
+          throw new Error(response.data.value);
+        }
+
         toast.success(`${response.message}`);
         closeModal();
       } catch (err) {
-        console.log(err);
-        closeModal();
-        toast.error("Заявка не была изменена!");
+        const error = JSON.parse(err.message);
+        toast.error(`${error.message}`);
       } finally {
         formik.setSubmitting(false);
       }
@@ -131,39 +135,15 @@ export function EditOrderForm({ order, closeModal }: Props) {
     if (formik.values.typeOfCar !== "cargo") {
       setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", "");
+      formik.setFieldValue("movers", 0);
     } else {
       if (bodySize !== "") {
         formik.setFieldValue("bodySize", bodySize);
+      } else {
+        formik.setFieldValue("bodySize", "S");
       }
     }
   }, [formik.values.typeOfCar]);
-
-  useEffect(() => {
-    if (formik.values.weight >= 100) {
-      formik.setFieldValue("typeOfCar", "cargo");
-      setBodySize(formik.values.bodySize);
-    }
-    if (formik.values.weight < 100) {
-      formik.setFieldValue("typeOfCar", "express");
-      formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", "");
-    }
-    if (formik.values.weight < 300) {
-      formik.setFieldValue("bodySize", "S");
-      formik.setFieldValue("movers", undefined);
-    }
-    if (formik.values.weight >= 300) {
-      formik.setFieldValue("bodySize", "M");
-      formik.setFieldValue("movers", 1);
-    }
-    if (formik.values.weight > 700) {
-      formik.setFieldValue("bodySize", "L");
-    }
-    if (formik.values.weight > 1500) {
-      formik.setFieldValue("bodySize", "XL");
-    }
-  }, [formik.values.weight]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -354,20 +334,7 @@ export function EditOrderForm({ order, closeModal }: Props) {
               </Button>
             </div>
           </Box>
-          <TextField
-            disabled={
-              OrderStatus[formik.values.status] === "Выполняется" ||
-              OrderStatus[formik.values.status] === "Выполнена"
-            }
-            type="number"
-            label="Вес"
-            name="weight"
-            id="weight"
-            value={formik.values.weight}
-            onChange={formik.handleChange}
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
-          />
+
           <FormControl>
             <FormLabel className="mb-4">Тип доставки</FormLabel>
 
@@ -395,9 +362,12 @@ export function EditOrderForm({ order, closeModal }: Props) {
             <>
               <Box className="flex justify-between max-sm:flex-col max-sm:items-center bg-gray-100 rounded-xl">
                 <Box className="flex flex-col w-1/2 max-sm:mt-4 justify-center items-center">
-                  <Typography>{bodySizeMap[formik.values.bodySize]}</Typography>
+                  <Typography>{bodyNameMap[formik.values.bodySize]}</Typography>
                   <Typography className="text-gray-400" fontSize="small">
                     до {bodyWeightMap[formik.values.bodySize]} кг
+                  </Typography>
+                  <Typography className="text-gray-400" fontSize="small">
+                    {bodySizeMap[formik.values.bodySize]}
                   </Typography>
                 </Box>
                 <Box className="bg-gray-200 rounded w-1/2 max-sm:w-[80%] h-16 m-5">
@@ -414,18 +384,9 @@ export function EditOrderForm({ order, closeModal }: Props) {
                   </RadioGroup>
                 </Box>
               </Box>
-              <TextField
-                disabled={OrderStatus[formik.values.status] === "Выполняется"}
-                type="number"
-                label="Количество грузчиков"
-                name="movers"
-                id="movers"
-                value={formik.values.movers}
-                onChange={formik.handleChange}
-              />
+              <Movers formik={formik} />
             </>
           )}
-          <div></div>
         </div>
       </Box>
 

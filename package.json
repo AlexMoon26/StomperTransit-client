@@ -38,8 +38,8 @@
     "yup": "^0.27.0"
   },
   "devDependencies": {
-    "@types/node": "20.10.3",
-    "@types/react": "^18.2.42",
+    "@types/node": "20.14.2",
+    "@types/react": "18.3.3",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/parser": "^7.0.0-alpha.0",
     "autoprefixer": "^10.4.16",
@@ -48,6 +48,6 @@
     "postcss": "^8.4.31",
     "prettier": "2.5.1",
     "tailwindcss": "^3.3.3",
-    "typescript": "latest"
+    "typescript": "5.4.5"
   }
 }

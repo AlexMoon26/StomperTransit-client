@@ -11,6 +11,22 @@ export async function getClients() {
   return response;
 }
 
+export async function getClientById(id: number) {
+  const response = await apiFetch(`users/${id}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return response;
+}
+
+export async function getClientOrdersById(id: number) {
+  const response = await apiFetch(`users/${id}/orders`, {
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return response;
+}
+
 export async function createClient(client: User) {
   const response = await apiFetch(`users`, {
     method: "POST",

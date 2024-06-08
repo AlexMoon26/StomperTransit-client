@@ -13,6 +13,9 @@ export async function apiFetch(endpoint: string, options?: RequestInit) {
       headers: { ...headers, ...options?.headers },
     });
 
+    if (response.status === 400) return { status: 400, data: response.json() }
+
+
     if (response) return response.json();
   } catch (err) {
     return false;

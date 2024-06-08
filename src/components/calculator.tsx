@@ -6,7 +6,7 @@ import {
   deliveryOptions,
 } from "@/components/orders/deliveryOption";
 import { handleSearchPlaces } from "@/config/searchPlaces";
-import { Calc, Places, bodySizeMap, bodyWeightMap } from "@/types";
+import { Calc, Places, bodyNameMap, bodySizeMap, bodyWeightMap } from "@/types";
 import { LoadingButton } from "@mui/lab";
 import {
   Autocomplete,
@@ -45,10 +45,9 @@ export const Calculator = () => {
     initialValues: {
       pointA: "г Краснодар,",
       pointB: "г Краснодар,",
-      weight: 10,
       typeOfCar: "express",
       bodySize: "",
-      movers: null,
+      movers: 0,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -78,39 +77,15 @@ export const Calculator = () => {
     if (formik.values.typeOfCar !== "cargo") {
       setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", "");
+      formik.setFieldValue("movers", 0);
     } else {
       if (bodySize !== "") {
         formik.setFieldValue("bodySize", bodySize);
+      } else {
+        formik.setFieldValue("bodySize", "S");
       }
     }
   }, [formik.values.typeOfCar]);
-
-  useEffect(() => {
-    if (formik.values.weight >= 100) {
-      formik.setFieldValue("typeOfCar", "cargo");
-      setBodySize(formik.values.bodySize);
-    }
-    if (formik.values.weight < 100) {
-      formik.setFieldValue("typeOfCar", "express");
-      formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", "");
-    }
-    if (formik.values.weight < 300) {
-      formik.setFieldValue("bodySize", "S");
-      formik.setFieldValue("movers", undefined);
-    }
-    if (formik.values.weight >= 300) {
-      formik.setFieldValue("bodySize", "M");
-      formik.setFieldValue("movers", 1);
-    }
-    if (formik.values.weight > 700) {
-      formik.setFieldValue("bodySize", "L");
-    }
-    if (formik.values.weight > 1500) {
-      formik.setFieldValue("bodySize", "XL");
-    }
-  }, [formik.values.weight]);
   return (
     <>
       <div className="p-10 w-1/2 bg-white rounded max-lg:w-full max-h-[940px] max-sm:max-h-[1200px] shadow">
@@ -183,22 +158,6 @@ export const Calculator = () => {
                 />
               )}
             />
-            <TextField
-              type="number"
-              label="Вес"
-              name="weight"
-              id="weight"
-              value={formik.values.weight}
-              onChange={formik.handleChange}
-              onBlur={() =>
-                formik.handleBlur({
-                  target: { name: "updatedFields.weight" },
-                })
-              }
-              error={formik.touched.weight && Boolean(formik.errors.weight)}
-              helperText={formik.touched.weight && formik.errors.weight}
-            />
-
             <FormControl>
               <FormLabel className="mb-4">Тип доставки</FormLabel>
 
@@ -225,10 +184,13 @@ export const Calculator = () => {
                 <Box className="flex justify-between flex-col bg-gray-100 rounded-xl">
                   <Box className="flex flex-col w-full p-5 justify-center items-center">
                     <Typography>
-                      {bodySizeMap[formik.values.bodySize]}
+                      {bodyNameMap[formik.values.bodySize]}
                     </Typography>
                     <Typography className="text-gray-400" fontSize="small">
                       до {bodyWeightMap[formik.values.bodySize]} кг
+                    </Typography>
+                    <Typography className="text-gray-400" fontSize="small">
+                      {bodySizeMap[formik.values.bodySize]}
                     </Typography>
                   </Box>
                   <Box className="bg-gray-200 rounded max-md:w-full h-16 m-5 p-5">

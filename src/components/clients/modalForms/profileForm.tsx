@@ -15,7 +15,7 @@ interface Props {
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Имя обязательно!"),
-  surName: Yup.string().required("Имя обязательно!"),
+  surName: Yup.string().required("Фамилия обязательна!"),
 });
 
 export function ProfileForm({ client, closeModal }: Props) {

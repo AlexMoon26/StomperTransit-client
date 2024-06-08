@@ -93,9 +93,6 @@ export const OrderCard = ({ order }: Props) => {
           </h5>
 
           <h5 className="text-gray-500 dark:text-gray-400">
-            Вес: {order.weight} кг
-          </h5>
-          <h5 className="text-gray-500 dark:text-gray-400">
             Вид доставки: {DeliveryStatus[order.typeOfCar]} {order?.bodySize}
           </h5>
           {order.movers ? (
@@ -113,14 +110,12 @@ export const OrderCard = ({ order }: Props) => {
                 </span>
               ) : OrderStatus[order.status] === "Выполняется" ? (
                 <>
-                  <span className="font-normal leading-tight  dark:text-orange-400">
+                  <span className="font-normal leading-tight  dark:text-orange-400 whitespace-nowrap">
                     Водитель - {` `}
                     {`${order.driver?.firstName || ""} ${
                       order.driver?.surName || ""
-                    }`}
-                  </span>
-                  <span className="font-normal leading-tight text-red-400 ">
-                    {order.driverStatus}
+                    }`}{" "}
+                    {order.driver?.driverInfo.driverStatus}
                   </span>
                 </>
               ) : (

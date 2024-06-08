@@ -13,11 +13,23 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { Order, Places, User, bodySizeMap, bodyWeightMap } from "@/types";
+import {
+  Order,
+  Places,
+  User,
+  bodyNameMap,
+  bodySizeMap,
+  bodyWeightMap,
+} from "@/types";
 import { createOrder } from "@/api/orders";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/config/apiFetch";
-import { BodySize, DeliveryOption, deliveryOptions } from "../deliveryOption";
+import {
+  BodySize,
+  DeliveryOption,
+  Movers,
+  deliveryOptions,
+} from "../deliveryOption";
 import moment, { Moment } from "moment";
 import { handleSearchPlaces } from "@/config/searchPlaces";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -41,10 +53,6 @@ const validationSchema = Yup.object().shape({
   approximateTime: Yup.date()
     .required("Ориентировочное время обязательно")
     .min(moment().startOf("day"), "Дата не может быть в прошлом"),
-  weight: Yup.number()
-    .required("Вес обязателен")
-    .positive("Вес должен быть положительным числом")
-    .max(2000, "Вес не должен превышать 2000 кг"),
 });
 
 export function CreateOrderForm({ closeModal }: Props) {
@@ -56,11 +64,10 @@ export function CreateOrderForm({ closeModal }: Props) {
     initialValues: {
       pointA: "г Краснодар,",
       pointB: "г Краснодар,",
-      weight: 10,
       client: undefined,
       typeOfCar: "express",
       bodySize: "S",
-      movers: null,
+      movers: 0,
       approximateTime: "",
     },
     validationSchema: validationSchema,
@@ -112,39 +119,15 @@ export function CreateOrderForm({ closeModal }: Props) {
     if (formik.values.typeOfCar !== "cargo") {
       setBodySize(formik.values.bodySize);
       formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", "");
+      formik.setFieldValue("movers", 0);
     } else {
       if (bodySize !== "") {
         formik.setFieldValue("bodySize", bodySize);
+      } else {
+        formik.setFieldValue("bodySize", "S");
       }
     }
   }, [formik.values.typeOfCar]);
-
-  useEffect(() => {
-    if (formik.values.weight >= 100) {
-      formik.setFieldValue("typeOfCar", "cargo");
-      setBodySize(formik.values.bodySize);
-    }
-    if (formik.values.weight < 100) {
-      formik.setFieldValue("typeOfCar", "express");
-      formik.setFieldValue("bodySize", "");
-      formik.setFieldValue("movers", "");
-    }
-    if (formik.values.weight < 300) {
-      formik.setFieldValue("bodySize", "S");
-      formik.setFieldValue("movers", undefined);
-    }
-    if (formik.values.weight >= 300) {
-      formik.setFieldValue("bodySize", "M");
-      formik.setFieldValue("movers", 1);
-    }
-    if (formik.values.weight > 700) {
-      formik.setFieldValue("bodySize", "L");
-    }
-    if (formik.values.weight > 1500) {
-      formik.setFieldValue("bodySize", "XL");
-    }
-  }, [formik.values.weight]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -272,21 +255,6 @@ export function CreateOrderForm({ closeModal }: Props) {
               </Button>
             </div>
           </Box>
-          <TextField
-            type="number"
-            label="Вес"
-            name="weight"
-            id="weight"
-            value={formik.values.weight}
-            onChange={formik.handleChange}
-            onBlur={() =>
-              formik.handleBlur({
-                target: { name: "updatedFields.weight" },
-              })
-            }
-            error={formik.touched.weight && Boolean(formik.errors.weight)}
-            helperText={formik.touched.weight && formik.errors.weight}
-          />
           <FormControl>
             <FormLabel className="mb-4">Тип доставки</FormLabel>
 
@@ -312,9 +280,12 @@ export function CreateOrderForm({ closeModal }: Props) {
             <>
               <Box className="flex justify-between max-md:flex-col bg-gray-100 rounded-xl">
                 <Box className="flex flex-col w-full p-5 justify-center items-center">
-                  <Typography>{bodySizeMap[formik.values.bodySize]}</Typography>
+                  <Typography>{bodyNameMap[formik.values.bodySize]}</Typography>
                   <Typography className="text-gray-400" fontSize="small">
                     до {bodyWeightMap[formik.values.bodySize]} кг
+                  </Typography>
+                  <Typography className="text-gray-400" fontSize="small">
+                    {bodySizeMap[formik.values.bodySize]}
                   </Typography>
                 </Box>
                 <Box className="bg-gray-200 rounded md:w-full h-16 m-5 p-5">
@@ -332,14 +303,7 @@ export function CreateOrderForm({ closeModal }: Props) {
                   </RadioGroup>
                 </Box>
               </Box>
-              <TextField
-                type="number"
-                label="Количество грузчиков"
-                name="movers"
-                id="movers"
-                value={formik.values.movers || ""}
-                onChange={formik.handleChange}
-              />
+              <Movers formik={formik} />
             </>
           )}
         </div>

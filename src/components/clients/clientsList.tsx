@@ -1,6 +1,6 @@
 "use client";
 import { useScreenWidth } from "@/hooks/useScreenWidth";
-import { User } from "@/types";
+import { UserFull } from "@/types";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import { ModalContext } from "../modalContext";
 import { CreateClientForm } from "./modalForms/createClientForm";
 
 interface Props {
-  clients: User[];
+  clients: UserFull[];
 }
 
 export default function ClientsList({ clients }: Props) {

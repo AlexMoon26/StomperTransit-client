@@ -36,7 +36,7 @@ export function LoginPage() {
           throw new Error("Ошибка авторизации");
         }
         toast.success("Успешная авторизация!");
-        router.push("/");
+        router.push("/home");
       } catch (err) {
         toast.error(`${err}`);
       }

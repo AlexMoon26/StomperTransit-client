@@ -11,6 +11,7 @@ import { deleteOrder } from "@/api/orders";
 import { toast } from "sonner";
 import "moment/locale/ru";
 import Link from "next/link";
+import TimeSinceUpdate from "../timeSinceUpdate";
 
 interface Props {
   order: OrderFull;
@@ -44,7 +45,7 @@ export const OrderCard = ({ order }: Props) => {
         }  p-5 rounded bg-white`}
         role="list"
       >
-        <Box className="w-full flex flex-col gap-3 justify-center">
+        <Box className="w-full flex flex-col gap-3  justify-between">
           <Box className="flex items-center justify-between">
             <h5 className="text-gray-400 truncate">ID: {order._id}</h5>
 
@@ -73,12 +74,20 @@ export const OrderCard = ({ order }: Props) => {
             </span>
           </Box>
 
-          <h5 className="text-gray-400 ">
-            Клиент:{" "}
-            <Link className="underline" href={`/clients/${order.client?._id}`}>
-              {order.client?.surName} {order.client?.firstName}
-            </Link>
-          </h5>
+          <Box className="flex justify-between">
+            <h5 className="text-gray-400 ">
+              Клиент:{" "}
+              <Link
+                className="underline"
+                href={`/clients/${order.client?._id}`}
+              >
+                {order.client?.surName} {order.client?.firstName}
+              </Link>
+            </h5>
+            {OrderStatus[order.status] === "Выполняется" && (
+              <TimeSinceUpdate updatedAt={order.updatedAt} />
+            )}
+          </Box>
 
           <Box>
             <h5 className="text-green-500">

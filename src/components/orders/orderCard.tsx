@@ -1,7 +1,7 @@
 "use client";
 import { DeliveryStatus, OrderFull, OrderStatus } from "@/types";
 import moment from "moment";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useContext } from "react";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import "moment/locale/ru";
 import Link from "next/link";
 import TimeSinceUpdate from "../timeSinceUpdate";
+import GenerateInvoiceButton from "../reports/modalForms/generateInvoice";
 
 interface Props {
   order: OrderFull;
@@ -122,12 +123,12 @@ export const OrderCard = ({ order }: Props) => {
             <Box className="flex justify-between items-center">
               <Box className="flex w-full items-center">
                 {OrderStatus[order.status] === "В ожидании" ? (
-                  <span className="font-normal leading-tight hover:cursor-pointer dark:text-purple-400">
+                  <span className="font-normal leading-tight hover:cursor-pointer text-purple-400">
                     Выберите водителя
                   </span>
                 ) : OrderStatus[order.status] === "Выполняется" ? (
                   <>
-                    <span className="font-normal leading-tight  dark:text-orange-400 whitespace-nowrap">
+                    <span className="font-normal leading-tight  text-orange-400 whitespace-nowrap">
                       Водитель - {` `}
                       {`${order.driver?.firstName || ""} ${
                         order.driver?.surName || ""
@@ -136,19 +137,28 @@ export const OrderCard = ({ order }: Props) => {
                     </span>
                   </>
                 ) : (
-                  <span className="font-normal leading-tight  dark:text-green-500">
+                  <span className="font-normal leading-tight  text-green-500">
                     Водитель - {order.driver?.firstName} {order.driver?.surName}
                   </span>
                 )}
               </Box>
               <Box className="w-full flex justify-end gap-3">
-                <IconButton onClick={handleDeleteOrder}>
-                  <DeleteIcon color="error" />
-                </IconButton>
+                {OrderStatus[order.status] === "В ожидании" && (
+                  <GenerateInvoiceButton order={order} />
+                )}
+                {OrderStatus[order.status] !== "Выполняется" && (
+                  <Tooltip title="Удалить заявку" arrow>
+                    <IconButton onClick={handleDeleteOrder}>
+                      <DeleteIcon color="error" />
+                    </IconButton>
+                  </Tooltip>
+                )}
                 {OrderStatus[order.status] !== "Выполнена" && (
-                  <IconButton onClick={handleOpenEditOrderModal}>
-                    <ModeIcon color="warning" />
-                  </IconButton>
+                  <Tooltip title="Редактировать заявку" arrow>
+                    <IconButton onClick={handleOpenEditOrderModal}>
+                      <ModeIcon color="warning" />
+                    </IconButton>
+                  </Tooltip>
                 )}
               </Box>
             </Box>

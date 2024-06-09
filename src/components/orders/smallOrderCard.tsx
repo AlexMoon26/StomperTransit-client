@@ -1,7 +1,7 @@
 "use client";
 import { DeliveryStatus, OrderFull, OrderStatus } from "@/types";
 import moment from "moment";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useContext } from "react";
@@ -11,6 +11,7 @@ import { deleteOrder } from "@/api/orders";
 import { toast } from "sonner";
 import Link from "next/link";
 import "moment/locale/ru";
+import GenerateInvoiceButton from "../reports/modalForms/generateInvoice";
 
 interface Props {
   order: OrderFull;
@@ -92,7 +93,7 @@ export const SmallOrderCard = ({ order }: Props) => {
           <h5 className="text-gray-400">
             Дата формирования: {moment(order.createdAt).format("LLL")}
           </h5>
-          <h5 className="text-gray-500 dark:text-gray-400">
+          <h5 className="text-gray-400 dark:text-gray-400">
             Вид доставки: {DeliveryStatus[order.typeOfCar]} {order?.bodySize}
           </h5>
           <Box className="flex justify-between items-center">
@@ -100,13 +101,20 @@ export const SmallOrderCard = ({ order }: Props) => {
               Цена: {order.cost} Р
             </h5>
             <Box className="w-full flex justify-end gap-3">
-              <IconButton onClick={handleDeleteOrder}>
-                <DeleteIcon color="error" />
-              </IconButton>
-              {OrderStatus[order.status] !== "Выполнена" && (
-                <IconButton onClick={handleOpenEditOrderModal}>
-                  <ModeIcon color="warning" />
+              {OrderStatus[order.status] === "В ожидании" && (
+                <GenerateInvoiceButton order={order} />
+              )}
+              <Tooltip title="Удалить заявку" arrow>
+                <IconButton onClick={handleDeleteOrder}>
+                  <DeleteIcon color="error" />
                 </IconButton>
+              </Tooltip>
+              {OrderStatus[order.status] !== "Выполнена" && (
+                <Tooltip title="Редактировать заявку" arrow>
+                  <IconButton onClick={handleOpenEditOrderModal}>
+                    <ModeIcon color="warning" />
+                  </IconButton>
+                </Tooltip>
               )}
             </Box>
           </Box>

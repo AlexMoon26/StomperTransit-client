@@ -123,8 +123,6 @@ export function EditOrderForm({ order, closeModal }: Props) {
     (async () => {
       try {
         const response = await apiFetch(`drivers/free`);
-        console.log(response);
-
         setDrivers(response);
       } catch (error) {
         console.error("Error fetching users:", error);

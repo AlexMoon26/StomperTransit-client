@@ -16,6 +16,8 @@ export const handleSearchPlaces = (search): Promise<Places[]> => {
         body: JSON.stringify({ query: search }),
       });
       const places = await response.json();
+
+
       return places.suggestions;
     } catch (err) {
       return [];

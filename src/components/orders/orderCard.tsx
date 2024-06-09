@@ -1,7 +1,7 @@
 "use client";
 import { DeliveryStatus, OrderFull, OrderStatus } from "@/types";
 import moment from "moment";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeIcon from "@mui/icons-material/Mode";
 import { useContext } from "react";
@@ -142,13 +142,17 @@ export const OrderCard = ({ order }: Props) => {
                 )}
               </Box>
               <Box className="w-full flex justify-end gap-3">
-                <IconButton onClick={handleDeleteOrder}>
-                  <DeleteIcon color="error" />
-                </IconButton>
-                {OrderStatus[order.status] !== "Выполнена" && (
-                  <IconButton onClick={handleOpenEditOrderModal}>
-                    <ModeIcon color="warning" />
+                <Tooltip title="Удалить заявку" arrow>
+                  <IconButton onClick={handleDeleteOrder}>
+                    <DeleteIcon color="error" />
                   </IconButton>
+                </Tooltip>
+                {OrderStatus[order.status] !== "Выполнена" && (
+                  <Tooltip title="Редактировать заявку" arrow>
+                    <IconButton onClick={handleOpenEditOrderModal}>
+                      <ModeIcon color="warning" />
+                    </IconButton>
+                  </Tooltip>
                 )}
               </Box>
             </Box>

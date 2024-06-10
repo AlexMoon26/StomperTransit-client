@@ -80,7 +80,7 @@ const GenerateInvoiceButton = ({ order }: { order: OrderFull }) => {
     };
 
     drawTextWithAlignment("Stomper Transit", height - 50);
-    drawTextWithAlignment("ИНН **********", height - 70);
+    drawTextWithAlignment("ИНН 0000000000", height - 70);
     drawTextWithAlignment(
       "Место расчётов: https://stompertransit.vercel.app",
       height - 90,
@@ -144,10 +144,10 @@ const GenerateInvoiceButton = ({ order }: { order: OrderFull }) => {
     drawTextWithAlignment(`0`, height - 440, "right", 80);
 
     drawTextWithAlignment(`Предмет расчета`, height - 470, "left", 80);
-    drawTextWithAlignment(`ПЛАТЕЖ`, height - 470, "right", 80);
+    drawTextWithAlignment(`ПРЕДОПЛАТА`, height - 470, "right", 80);
 
     drawTextWithAlignment(`Способ расчета`, height - 500, "left", 80);
-    drawTextWithAlignment(`ЧАСТИЧНАЯ ПРЕДОПЛАТА`, height - 500, "right", 80);
+    drawTextWithAlignment(`БЕЗНАЛИЧНЫМИ`, height - 500, "right", 80);
 
     drawHorizontalLine(80, height - 530, width - 80);
 

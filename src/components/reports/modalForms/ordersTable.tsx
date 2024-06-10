@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React from "react";
 import {
   Table,
@@ -8,11 +7,14 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { DeliveryStatus, OrderStatus } from "@/types";
-import moment from "moment";
+import { DeliveryStatus, OrderFull, OrderStatus } from "@/types";
 
-const OrdersTable = React.forwardRef((props, ref) => {
-  const { orders } = props;
+interface Props {
+  orders: OrderFull[];
+}
+
+const OrdersTable = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const { orders }: Props = props;
 
   return (
     <TableContainer ref={ref}>
@@ -22,7 +24,6 @@ const OrdersTable = React.forwardRef((props, ref) => {
             <TableCell>Клиент</TableCell>
             <TableCell>Точка A</TableCell>
             <TableCell>Точка B</TableCell>
-            <TableCell>Вес</TableCell>
             <TableCell>Статус</TableCell>
             <TableCell>Вид доставки</TableCell>
             <TableCell>Грузчики</TableCell>
@@ -33,11 +34,10 @@ const OrdersTable = React.forwardRef((props, ref) => {
           {orders.map((order) => (
             <TableRow key={order._id}>
               <TableCell>
-                {order.client.firstName} {order.client.surName}
+                {order.client!.firstName} {order.client!.surName}
               </TableCell>
               <TableCell>{order.pointA}</TableCell>
               <TableCell>{order.pointB}</TableCell>
-              <TableCell>{order.weight}</TableCell>
               <TableCell>
                 <span
                   className={`inline-flex text-center items-center justify-center max-sm:w-1/3 ${

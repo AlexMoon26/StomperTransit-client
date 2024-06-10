@@ -25,7 +25,7 @@ const TimeSinceUpdate = ({ updatedAt }) => {
   }, [updatedAt]);
 
   return (
-    <span className="inline-flex items-center justify-center max-sm:w-1/3 text-md font-medium mr-2 px-2.5 py-0.5 rounded-full text-gray-400">
+    <span className="inline-flex items-center justify-center text-md font-medium mr-2 px-2.5 py-0.5 rounded-full text-gray-400">
       {timeSinceUpdate}
     </span>
   );

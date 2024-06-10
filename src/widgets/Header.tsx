@@ -23,7 +23,7 @@ export const Header = () => {
         position: "relative",
         overflowX: "hidden",
       }}
-      className="w-screen"
+      className="w-screen sticky"
     >
       <Image
         src="/images/header-back.webp"

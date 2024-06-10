@@ -76,6 +76,7 @@ export function CreateOrderForm({ closeModal }: Props) {
       try {
         const response = await createOrder(values);
         if (!response) throw new Error(response);
+
         toast.success(`Заявка успешно создана`);
         closeModal();
       } catch (err) {

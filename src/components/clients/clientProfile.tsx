@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import {
   Box,
   Button,
-  Card,
   Pagination,
   Paper,
   Table,
@@ -23,10 +22,10 @@ import {
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
 import { LoadingButton } from "@mui/lab";
 import moment from "moment";
-import "moment/locale/ru";
 import { getCurrentPage } from "@/funcs";
 import { useRouter, useSearchParams } from "next/navigation";
 import EmptyItems from "../emptyItems";
+import "moment/locale/ru";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required("Имя обязательно!"),
@@ -167,7 +166,7 @@ export default function ClientProfile({ client, orders }: Props) {
               </TableHead>
               <TableBody>
                 {orders.items.map((order, i) => (
-                  <TableRow key={i}>
+                  <TableRow hover key={i}>
                     <TableCell>{order._id}</TableCell>
                     <TableCell className="whitespace-nowrap">
                       {moment(order.updatedAt).format("LL")}

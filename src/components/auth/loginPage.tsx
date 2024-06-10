@@ -51,7 +51,7 @@ export function LoginPage() {
         sm={4}
         md={6}
         sx={{
-          backgroundImage: "url(https://source.unsplash.com/random?wallpapers)",
+          backgroundImage: "url(/images/truck.png)",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",

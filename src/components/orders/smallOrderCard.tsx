@@ -47,10 +47,18 @@ export const SmallOrderCard = ({ order }: Props) => {
       >
         <Box className="w-full flex flex-col gap-2 justify-center">
           <Box className="flex items-center justify-between">
-            <h5 className="text-gray-400 truncate">ID: {order._id}</h5>
+            <h5 className="text-gray-400 ">
+              Клиент:{" "}
+              <Link
+                className="underline"
+                href={`/clients/${order.client?._id}`}
+              >
+                {order.client?.surName} {order.client?.firstName}
+              </Link>
+            </h5>
 
             <span
-              className={`inline-flex items-center justify-center max-sm:w-1/3  ${
+              className={`inline-flex items-center justify-center   ${
                 OrderStatus[order.status] === "В ожидании" &&
                 "text-purple-700 bg-purple-100"
               } ${
@@ -74,13 +82,6 @@ export const SmallOrderCard = ({ order }: Props) => {
             </span>
           </Box>
 
-          <h5 className="text-gray-400 ">
-            Клиент:{" "}
-            <Link className="underline" href={`/clients/${order.client?._id}`}>
-              {order.client?.surName} {order.client?.firstName}
-            </Link>
-          </h5>
-
           <Box>
             <h5 className="text-green-500">
               <span className="text-gray-400">Из</span> {order.pointA}
@@ -93,7 +94,7 @@ export const SmallOrderCard = ({ order }: Props) => {
           <h5 className="text-gray-400">
             Дата формирования: {moment(order.createdAt).format("LLL")}
           </h5>
-          <h5 className="text-gray-500 dark:text-gray-400">
+          <h5 className="text-gray-400 dark:text-gray-400">
             Вид доставки: {DeliveryStatus[order.typeOfCar]} {order?.bodySize}
           </h5>
           <Box className="flex justify-between items-center">

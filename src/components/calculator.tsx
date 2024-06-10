@@ -193,7 +193,7 @@ export const Calculator = () => {
                       {bodySizeMap[formik.values.bodySize]}
                     </Typography>
                   </Box>
-                  <Box className="bg-gray-200 rounded max-md:w-full h-16 m-5 p-5">
+                  <Box className="bg-gray-200 rounded  h-16 m-5 p-5">
                     <RadioGroup
                       className="flex justify-center items-center h-full"
                       id="typeOfCar"

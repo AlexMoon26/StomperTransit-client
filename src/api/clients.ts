@@ -1,6 +1,6 @@
 "use server";
 import { apiFetch } from "@/config/apiFetch";
-import { User } from "@/types";
+import { User, UserFull } from "@/types";
 import { revalidatePath } from "next/cache";
 
 export async function getClients() {
@@ -11,7 +11,7 @@ export async function getClients() {
   return response;
 }
 
-export async function getClientById(id: number) {
+export async function getClientById(id: number | string): Promise<UserFull> {
   const response = await apiFetch(`users/${id}`, {
     headers: { "Content-Type": "application/json" },
   });

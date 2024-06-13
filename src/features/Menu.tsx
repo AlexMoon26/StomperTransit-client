@@ -14,7 +14,7 @@ export function Menu({ handleSidebarToggle }) {
   const handleLogout = async () => {
     try {
       const response = await authLogout();
-      if (!response) {
+      if (!response.message) {
         throw new Error("Ошибка при выходе!");
       }
       toast.success(`${response.message}`);

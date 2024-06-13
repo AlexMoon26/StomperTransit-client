@@ -11,14 +11,12 @@ export default async function middleware(req: NextRequest) {
 
   try {
     const response = await profile();
-
-    if (!response) {
-      console.error("Error: Token is missing");
+    if (!response.ok) {
+      console.error("Error: Token is missing or invalid");
       return NextResponse.redirect(new URL("/signin", req.url));
     }
 
-    const role = await response?.role;
-
+    const role = response.role;
     if (role === "admin") {
       return NextResponse.next();
     } else {

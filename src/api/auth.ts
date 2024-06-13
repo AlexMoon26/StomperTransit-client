@@ -56,8 +56,8 @@ export async function register(data: AuthFormSignIn) {
 }
 
 export async function authLogout() {
-  cookies().delete("token");
-  cookies().delete("role");
+  await cookies().delete("token");
+  await cookies().delete("role");
   return { message: "Успешный выход" };
 }
 
@@ -65,8 +65,7 @@ export async function profile() {
   try {
     const response = await apiFetch("auth/me");
 
-
-    return response.user;
+    return { ok: true, ...response.user };
   } catch (err) {
     return { ok: false, message: err };
   }

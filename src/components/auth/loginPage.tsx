@@ -1,7 +1,6 @@
 "use client";
 import {
   Avatar,
-  Button,
   CssBaseline,
   TextField,
   Paper,
@@ -19,6 +18,7 @@ import Link from "next/link";
 import Copyright from "@/shared/Copyright";
 import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
 
 export function LoginPage() {
   const router = useRouter();
@@ -31,6 +31,7 @@ export function LoginPage() {
     validationSchema: validationLoginSchema,
     onSubmit: async (values) => {
       try {
+        formik.setSubmitting(true);
         const response = await login(values);
         if (!response) {
           throw new Error("Ошибка авторизации");
@@ -39,6 +40,8 @@ export function LoginPage() {
         router.push("/home");
       } catch (err) {
         toast.error(`${err}`);
+      } finally {
+        formik.setSubmitting(false);
       }
     },
   });
@@ -108,14 +111,15 @@ export function LoginPage() {
                 }
                 helperText={formik.touched.password && formik.errors.password}
               />
-              <Button
+              <LoadingButton
                 type="submit"
                 fullWidth
+                loading={formik.isSubmitting}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
                 Войти
-              </Button>
+              </LoadingButton>
             </form>
             <Grid container>
               <Grid item xs>

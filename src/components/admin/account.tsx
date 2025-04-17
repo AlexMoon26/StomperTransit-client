@@ -3,11 +3,10 @@ import { updateAdmin } from "@/api/admin";
 import InputMaskPhone from "@/shared/inputs/InputMaskPhone";
 import { UserFull } from "@/types";
 import { LoadingButton } from "@mui/lab";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as Yup from "yup";
 

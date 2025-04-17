@@ -4,7 +4,7 @@ import moment from "moment";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeIcon from "@mui/icons-material/Mode";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ModalContext } from "@/components/modalContext";
 import { EditOrderForm } from "@/components/orders/modalForms/editOrderForm";
 import { deleteOrder } from "@/api/orders";
@@ -20,11 +20,17 @@ interface Props {
 
 export const OrderCard = ({ order }: Props) => {
   const { openModal, closeModal } = useContext(ModalContext);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDeleteOrder() {
-    const response = await deleteOrder(order._id);
-    if (!response) return toast.error("Удаление заявки не произошло!");
-    toast.success("Заявка успешно удалена!");
+    try {
+      setIsDeleting(true);
+      const response = await deleteOrder(order._id);
+      if (!response) return toast.error("Удаление заявки не произошло!");
+      toast.success("Заявка успешно удалена!");
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   const handleOpenEditOrderModal = () => {
@@ -147,8 +153,17 @@ export const OrderCard = ({ order }: Props) => {
                 )}
                 {OrderStatus[order.status] !== "Выполняется" && (
                   <Tooltip title="Удалить заявку" arrow>
-                    <IconButton onClick={handleDeleteOrder}>
-                      <DeleteIcon color="error" />
+                    <IconButton
+                      onClick={handleDeleteOrder}
+                      disabled={isDeleting}
+                    >
+                      <DeleteIcon
+                        color="error"
+                        sx={{
+                          opacity: isDeleting ? 0.5 : 1,
+                          transition: "opacity 0.3s ease",
+                        }}
+                      />
                     </IconButton>
                   </Tooltip>
                 )}

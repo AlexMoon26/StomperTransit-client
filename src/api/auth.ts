@@ -56,8 +56,8 @@ export async function register(data: AuthFormSignIn) {
 }
 
 export async function authLogout() {
-  await cookies().delete("token");
-  await cookies().delete("role");
+  cookies().delete("token");
+  cookies().delete("role");
   return { message: "Успешный выход" };
 }
 

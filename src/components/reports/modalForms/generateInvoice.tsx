@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import { DeliveryStatus, OrderFull, OrderStatus, UserFull } from "@/types";
+import { DeliveryStatus, OrderFull } from "@/types";
 import moment from "moment";
 import { profile } from "@/api/auth";
 
@@ -16,16 +16,9 @@ async function fetchFont() {
 }
 
 const GenerateInvoiceButton = ({ order }: { order: OrderFull }) => {
-  const [admin, setAdmin] = useState<UserFull | null>(null);
-
-  useEffect(() => {
-    (async function getAdmin() {
-      const response = await profile();
-      setAdmin(response);
-    })();
-  }, []);
-
   const generatePDF = async () => {
+    const admin = await profile();
+
     const pdfDoc = await PDFDocument.create();
     pdfDoc.registerFontkit(fontkit);
     const fontBytes = await fetchFont();

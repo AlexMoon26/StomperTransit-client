@@ -1,6 +1,4 @@
 import { ChartLoader } from "@/components/loaders/chartLoader";
-import OrdersListLoader from "@/components/loaders/ordersListLoader";
-import { ButtonsAdminPage } from "@/features/ButtonsAdminPage";
 import { LatestCustomers } from "@/features/LatestCustomers";
 import { Box, Button, Skeleton } from "@mui/material";
 import React from "react";
